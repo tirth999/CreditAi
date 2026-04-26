@@ -1,0 +1,49 @@
+# Install torch and torch-geometric BEFORE running pip install -r requirements.txt:
+#
+#   pip install torch==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+#
+#   Try this first (works with PyG 2.3+ standalone):
+#   pip install torch-geometric
+#
+#   If that fails or you need scatter/sparse ops, use the wheel index instead:
+#   pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv \
+#       -f https://data.pyg.org/whl/torch-2.1.0+cpu.html
+#
+# torch-geometric is intentionally NOT in this file.
+
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+pydantic==2.5.3
+pydantic-settings==2.1.0
+numpy==1.26.3
+pandas==2.1.4
+polars==0.20.3
+scikit-learn==1.4.0
+xgboost==2.0.3
+lightgbm==4.2.0
+imbalanced-learn==0.11.0
+optuna==3.5.0
+shap==0.44.0
+lime==0.2.0.1
+interpret==0.5.1
+fairlearn==0.10.0
+aif360==0.6.1
+evidently==0.4.11
+river==0.21.0
+flwr==1.6.0
+opacus==1.4.0
+torch==2.1.2
+transformers==4.37.1
+huggingface-hub==0.20.3
+sdv==1.9.0
+folktables==0.0.12
+mlflow==2.9.2
+onnxruntime==1.16.3
+skl2onnx==1.16.0
+kaggle==1.5.16
+requests==2.31.0
+python-dotenv==1.0.0
+mapie==0.8.0
+scorecardpy==0.1.9.2
+statsmodels==0.14.0
+upstash-redis==0.15.0

@@ -1,0 +1,95 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: creditai
+      POSTGRES_PASSWORD: creditai_dev
+      POSTGRES_DB: creditai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U creditai"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+
+  api:
+    build: ./apps/api
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://creditai:creditai_dev@postgres:5432/creditai
+      - DATABASE_URL_SYNC=postgresql://creditai:creditai_dev@postgres:5432/creditai
+      - REDIS_URL=redis://redis:6379
+      - ML_SERVICE_URL=http://ml:8001
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./apps/api:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  ml:
+    build: ./apps/ml
+    ports:
+      - "8001:8001"
+    env_file: .env
+    environment:
+      - MODEL_ARTIFACT_DIR=/artifacts
+      - MLFLOW_TRACKING_URI=/mlruns
+    volumes:
+      - ./apps/ml:/app
+      - ml_artifacts:/artifacts
+      - mlflow_data:/mlruns
+    command: >
+      sh -c "python data/download_datasets.py && uvicorn main:app --host 0.0.0.0 --port 8001 --reload"
+
+  web:
+    build: ./apps/web
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      - NEXTAUTH_URL=http://localhost:3000
+      - BACKEND_URL=http://api:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    command: pnpm dev
+
+  celery:
+    build: ./apps/api
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://creditai:creditai_dev@postgres:5432/creditai
+      - REDIS_URL=redis://redis:6379
+      - ML_SERVICE_URL=http://ml:8001
+    command: celery -A tasks.celery_app worker --loglevel=info -Q default,scoring,retraining
+    depends_on:
+      - redis
+      - api
+    volumes:
+      - ./apps/api:/app
+
+volumes:
+  postgres_data:
+  redis_data:
+  ml_artifacts:
+  mlflow_data:

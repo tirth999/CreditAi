@@ -1,0 +1,15 @@
+{
+  "name": "creditai",
+  "private": true,
+  "workspaces": ["apps/web"],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.0"
+  },
+  "packageManager": "pnpm@8.15.1"
+}
