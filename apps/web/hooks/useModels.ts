@@ -4,7 +4,10 @@ import api from "@/lib/api"
 export const useModels = () =>
   useQuery({
     queryKey: ["models"],
-    queryFn: () => api.get("/api/models").then((r) => r.data),
+    queryFn: () => api.get("/api/models").then((r) => {
+      const d = r.data
+      return Array.isArray(d) ? d : d?.models ?? d?.items ?? []
+    }),
   })
 
 export const useModel = (id: string) =>

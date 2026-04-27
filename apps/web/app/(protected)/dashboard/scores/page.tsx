@@ -25,9 +25,17 @@ export default function ScoresPage() {
   const [sortBy, setSortBy] = useState<"date" | "score">("date")
   const [filterTier, setFilterTier] = useState("all")
 
-  const data = (scores ?? MOCK) as typeof MOCK
+  const raw = (scores ?? MOCK) as any[]
+  const data = raw.map((s: any) => ({
+    id: s.id ?? s.application_id ?? "",
+    date: s.date ?? s.created_at?.slice(0, 10) ?? "",
+    score: s.score ?? 0,
+    risk_tier: s.risk_tier ?? "Medium-High",
+    pd: s.pd ?? s.probability_of_default ?? 0,
+    fairness: s.fairness ?? true,
+  }))
   let filtered = filterTier === "all" ? data : data.filter(s => s.risk_tier === filterTier)
-  filtered = [...filtered].sort((a, b) => sortBy === "date" ? b.date.localeCompare(a.date) : b.score - a.score)
+  filtered = [...filtered].sort((a, b) => sortBy === "date" ? (b.date || "").localeCompare(a.date || "") : b.score - a.score)
   const pages = Math.ceil(filtered.length / 10)
   const pageData = filtered.slice(page * 10, (page + 1) * 10)
 

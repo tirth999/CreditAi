@@ -27,7 +27,15 @@ export default function DashboardPage() {
   const { data: scores } = useScores()
   const { data: drift } = useDriftLatest()
 
-  const displayScores = scores ?? MOCK_SCORES
+  const rawScores = (scores ?? MOCK_SCORES) as any[]
+  const displayScores = rawScores.map((s: any) => ({
+    date: s.date ?? s.created_at?.slice(0, 10) ?? "",
+    score: s.score ?? 0,
+    application_id: s.application_id ?? s.id ?? "",
+    risk_tier: s.risk_tier ?? "Medium-Low",
+    pd: s.pd ?? s.probability_of_default ?? 0,
+    fairness: s.fairness ?? true,
+  }))
   const latest = displayScores[displayScores.length - 1]
   const driftDetected = drift?.drift_detected ?? false
 

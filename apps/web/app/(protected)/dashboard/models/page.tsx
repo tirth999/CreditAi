@@ -27,10 +27,21 @@ const MOCK_IMPORTANCE = [
 
 export default function ModelsPage() {
   const { data: session } = useSession()
-  const { data: models } = useModels()
+  const { data: rawModels } = useModels()
   const promote = usePromoteModel()
   const [selected, setSelected] = useState<string | null>(null)
-  const data = (models as any) ?? MOCK_MODELS
+  const data = ((rawModels as any[]) ?? MOCK_MODELS).map((m: any) => ({
+    version: m.version ?? "",
+    algorithm: m.algorithm ?? "",
+    dataset: m.dataset ?? "",
+    auc: m.auc ?? m.auc_roc ?? 0,
+    f1: m.f1 ?? m.f1_score ?? 0,
+    gini: m.gini ?? m.gini_coefficient ?? 0,
+    accuracy: m.accuracy ?? 0,
+    fairness: m.fairness ?? 0,
+    train_date: m.train_date?.slice(0, 10) ?? "",
+    status: m.status ?? (m.is_active ? "active" : "archived"),
+  }))
   const isAdmin = (session?.user as any)?.role === "admin"
 
   return (
