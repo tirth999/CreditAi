@@ -67,7 +67,7 @@ A production-grade credit scoring platform that solves 7 open problems in AI-pow
 | **UI** | shadcn/ui, Radix, Tailwind CSS | Component library, accessibility |
 | **Charts** | D3.js, Recharts | Score gauge, SHAP waterfall/beeswarm, drift timeline |
 | **State** | Zustand, React Query | Client state, server cache |
-| **Auth** | NextAuth v5 (beta) | OAuth, JWT sessions |
+| **Auth** | NextAuth v4 | Credentials, JWT sessions |
 | **API** | FastAPI, Pydantic v2 | REST endpoints, validation |
 | **Database** | PostgreSQL (Neon), SQLAlchemy 2.0 | Async ORM, migrations (Alembic) |
 | **Cache** | Upstash Redis (REST), local Redis (TCP) | Session cache, Celery broker |
@@ -83,6 +83,14 @@ A production-grade credit scoring platform that solves 7 open problems in AI-pow
 ---
 
 ## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** ≥ 18 + **pnpm** (`npm install -g pnpm`)
+- **Python** ≥ 3.9
+- **Git**
+
+### One-Command Setup
 
 ```bash
 # 1. Clone
@@ -101,25 +109,73 @@ open http://localhost:3000
 
 ## 🖥 Running the App
 
-### Option A: Three Terminals
+### Step-by-Step (Manual)
+
+If you prefer manual setup over the script:
 
 ```bash
-# Terminal 1 — API Server
+# 1. Install frontend + root dependencies
+pnpm install
+
+# 2. Create API virtual environment & install deps
 cd apps/api
+python3 -m venv venv
 source venv/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ../..
+
+# 3. Create ML virtual environment & install deps
+cd apps/ml
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ../..
+
+# 4. Set up environment variables
+#    The .env file at the root contains all required secrets.
+#    The apps/web/.env.local file configures the frontend.
+#    Edit these if you need to point to different services.
+
+# 5. Create database tables & seed data
+cd apps/api && source venv/bin/activate
+python3 -c "
+import sys; sys.path.insert(0, '.')
+from core.database import engine, Base
+from models import *
+import asyncio
+async def init():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+asyncio.run(init())
+print('Tables created')
+"
+python3 ../../scripts/seed_db.py --direct
+deactivate && cd ../..
+```
+
+### Starting All 3 Services
+
+Open **3 separate terminals**, all from the project root:
+
+```bash
+# Terminal 1 — API Server (port 8000)
+cd apps/api && source venv/bin/activate
 uvicorn main:app --reload --port 8000
 
-# Terminal 2 — ML Microservice
-cd apps/ml
-source venv/bin/activate
+# Terminal 2 — ML Microservice (port 8001)
+cd apps/ml && source venv/bin/activate
 uvicorn main:app --reload --port 8001
 
-# Terminal 3 — Next.js Frontend
+# Terminal 3 — Next.js Frontend (port 3000)
 cd apps/web
 pnpm dev
 ```
 
-### Option B: Docker Compose
+Open **http://localhost:3000** in your browser.
+
+### Docker Compose (Alternative)
 
 ```bash
 docker-compose up
