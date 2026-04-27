@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..federated.flower_server import run_federated_simulation
+from federated.flower_server import run_federated_simulation
 
 router = APIRouter()
 

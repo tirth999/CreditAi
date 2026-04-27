@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path
 
 from .synthetic_gen import generate_full_dataset
-from ..core.config import ml_settings
+from core.config import ml_settings
 
 logger = logging.getLogger(__name__)
 

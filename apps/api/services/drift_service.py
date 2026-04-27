@@ -4,8 +4,8 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ..models.drift_report import DriftReport
-from ..schemas.drift import DriftOut, DriftHistoryOut
+from models.drift_report import DriftReport
+from schemas.drift import DriftOut, DriftHistoryOut
 
 
 class DriftService:

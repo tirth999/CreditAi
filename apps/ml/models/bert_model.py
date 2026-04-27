@@ -22,7 +22,7 @@ def _load_finbert() -> None:
     try:
         from transformers import pipeline, AutoTokenizer, AutoModel
         import torch
-        from ..core.config import ml_settings
+        from core.config import ml_settings
 
         if not ml_settings.USE_FINBERT or not ml_settings.HF_TOKEN:
             return
@@ -45,7 +45,7 @@ def _get_cls_embedding(text: str) -> list[float]:
     try:
         import torch
         from transformers import AutoTokenizer, AutoModel
-        from ..core.config import ml_settings
+        from core.config import ml_settings
 
         tokenizer = AutoTokenizer.from_pretrained(
             _FINBERT_MODEL, token=ml_settings.HF_TOKEN

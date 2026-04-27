@@ -5,13 +5,13 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ..core.config import settings
-from ..models.application import Application
-from ..models.score import Score
-from ..models.shap_value import ShapValue
-from ..models.model_registry import ModelRegistry
-from ..schemas.score import ScoreCreate, ScoreOut, ScoreJobOut, ScoreStatusOut
-from ..schemas.model import ModelOut, ModelListOut
+from core.config import settings
+from models.application import Application
+from models.score import Score
+from models.shap_value import ShapValue
+from models.model_registry import ModelRegistry
+from schemas.score import ScoreCreate, ScoreOut, ScoreJobOut, ScoreStatusOut
+from schemas.model import ModelOut, ModelListOut
 
 
 class ScoreService:

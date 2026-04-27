@@ -1,4 +1,7 @@
 from pydantic_settings import BaseSettings
+from pathlib import Path
+
+_root = Path(__file__).resolve().parent.parent.parent.parent
 
 
 class MLSettings(BaseSettings):
@@ -13,7 +16,8 @@ class MLSettings(BaseSettings):
     USE_FEDERATED: bool = True
 
     class Config:
-        env_file = ".env"
+        env_file = (str(_root / ".env"), ".env")
+        extra = "ignore"
 
 
 ml_settings = MLSettings()

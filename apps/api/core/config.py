@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings
 from typing import List
+from pathlib import Path
+
+_root = Path(__file__).resolve().parent.parent.parent.parent  # CreditAi/
 
 
 class Settings(BaseSettings):
@@ -25,8 +28,9 @@ class Settings(BaseSettings):
     MODEL_ARTIFACT_DIR: str = "./artifacts"
 
     class Config:
-        env_file = ".env"
+        env_file = (str(_root / ".env"), ".env")
         case_sensitive = True
+        extra = "ignore"
 
 
 settings = Settings()

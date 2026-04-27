@@ -33,7 +33,7 @@ def run_federated_simulation(
         import numpy as np
         import mlflow
         from .flower_client import make_client_fn
-        from ..data.synthetic_gen import generate_full_dataset
+        from data.synthetic_gen import generate_full_dataset
 
         # Generate partitioned data
         full_data = generate_full_dataset(n=5000)

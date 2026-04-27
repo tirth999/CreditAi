@@ -1,5 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks
-from ..training.train_pipeline import run_training_pipeline
+from training.train_pipeline import run_training_pipeline
 
 router = APIRouter()
 

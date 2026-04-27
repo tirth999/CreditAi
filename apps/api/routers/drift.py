@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.drift import DriftOut, DriftHistoryOut
-from ..services.drift_service import DriftService
-from ..core.deps import get_db, get_current_user, require_admin
+from schemas.drift import DriftOut, DriftHistoryOut
+from services.drift_service import DriftService
+from core.deps import get_db, get_current_user, require_admin
 
 router = APIRouter()
 
@@ -28,6 +28,6 @@ async def drift_history(
 
 @router.post("/retrain")
 async def trigger_retrain(admin=Depends(require_admin)):
-    from ..tasks.retrain_task import trigger_retrain as _retrain
+    from tasks.retrain_task import trigger_retrain as _retrain
     job = _retrain.delay()
     return {"job_id": job.id, "status": "queued"}

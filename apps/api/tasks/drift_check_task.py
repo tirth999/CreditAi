@@ -1,6 +1,6 @@
 import httpx
-from .celery_app import celery_app
-from ..core.config import settings
+from tasks.celery_app import celery_app
+from core.config import settings
 
 
 @celery_app.task(name="tasks.check_drift", bind=True, max_retries=3)
@@ -14,7 +14,7 @@ def check_drift(self):
         resp.raise_for_status()
         result = resp.json()
         if result.get("drift_detected"):
-            from .retrain_task import trigger_retrain
+            from tasks.retrain_task import trigger_retrain
             trigger_retrain.delay()
         return result
     except Exception as exc:

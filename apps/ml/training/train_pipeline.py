@@ -32,20 +32,20 @@ def _load_dataset() -> pd.DataFrame:
             return df
 
     logger.warning("No dataset found — generating synthetic data")
-    from ..data.synthetic_gen import generate_full_dataset
+    from data.synthetic_gen import generate_full_dataset
     return generate_full_dataset(n=5000)
 
 
 async def run_training_pipeline(model_version: str | None = None) -> dict[str, Any]:
-    from ..data.preprocess import impute, encode_categoricals, apply_smote
-    from ..models.logistic_model import LogisticModel
-    from ..models.xgboost_model import XGBoostModel
-    from ..models.lightgbm_model import LightGBMModel
-    from ..xai.ebm_explainer import EBMExplainer
-    from ..training.evaluate import evaluate_model
-    from ..training.time_series_cv import OutOfTimeValidator
-    from ..training.mlflow_tracking import init_experiment, log_training_run
-    from ..fairness.metrics import compute_fairness_metrics
+    from data.preprocess import impute, encode_categoricals, apply_smote
+    from models.logistic_model import LogisticModel
+    from models.xgboost_model import XGBoostModel
+    from models.lightgbm_model import LightGBMModel
+    from xai.ebm_explainer import EBMExplainer
+    from training.evaluate import evaluate_model
+    from training.time_series_cv import OutOfTimeValidator
+    from training.mlflow_tracking import init_experiment, log_training_run
+    from fairness.metrics import compute_fairness_metrics
     from mapie.classification import MapieClassifier
 
     if model_version is None:

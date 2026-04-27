@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 from datetime import datetime
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from ..core.database import Base
+from core.database import Base
 
 
 class Session(Base):
@@ -15,5 +17,5 @@ class Session(Base):
     refresh_token_hash: Mapped[str] = mapped_column(String(255), unique=True)
     expires_at: Mapped[datetime]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    ip_address: Mapped[str | None] = mapped_column(String(45))
-    user_agent: Mapped[str | None] = mapped_column(String(500))
+    ip_address: Mapped[Optional[str]] = mapped_column(String(45))
+    user_agent: Mapped[Optional[str]] = mapped_column(String(500))

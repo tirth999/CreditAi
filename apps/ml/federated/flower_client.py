@@ -22,8 +22,8 @@ class _LocalClient:
         self._model = None
 
     def fit_local(self) -> dict[str, Any]:
-        from ..models.xgboost_model import XGBoostModel
-        from ..data.preprocess import full_preprocess
+        from models.xgboost_model import XGBoostModel
+        from data.preprocess import full_preprocess
 
         try:
             X, y, _ = full_preprocess(self.data)
@@ -36,7 +36,7 @@ class _LocalClient:
             return {"status": "error", "message": str(e)}
 
     def evaluate_local(self) -> dict[str, Any]:
-        from ..data.preprocess import full_preprocess
+        from data.preprocess import full_preprocess
         from sklearn.metrics import roc_auc_score
 
         result: dict[str, Any] = {"auc": 0.75}

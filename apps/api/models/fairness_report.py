@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 from datetime import datetime
 from sqlalchemy import String, Boolean, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from ..core.database import Base
+from core.database import Base
 
 
 class FairnessReport(Base):
@@ -11,11 +13,11 @@ class FairnessReport(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     score_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scores.id"))
     model_version: Mapped[str] = mapped_column(String(50))
-    demographic_parity_diff: Mapped[float | None]
-    equalized_odds_diff: Mapped[float | None]
-    disparate_impact_ratio: Mapped[float | None]
-    statistical_parity_diff: Mapped[float | None]
-    equal_opportunity_diff: Mapped[float | None]
+    demographic_parity_diff: Mapped[Optional[float]]
+    equalized_odds_diff: Mapped[Optional[float]]
+    disparate_impact_ratio: Mapped[Optional[float]]
+    statistical_parity_diff: Mapped[Optional[float]]
+    equal_opportunity_diff: Mapped[Optional[float]]
     flags: Mapped[dict] = mapped_column(JSON, default={})
     passed_regulatory_threshold: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)

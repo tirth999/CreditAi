@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 import hashlib
 from datetime import datetime, timedelta
@@ -5,10 +7,10 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from ..core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
-from ..models.user import User
-from ..models.session import Session
-from ..schemas.auth import RegisterRequest, LoginRequest, TokenResponse, UserOut
+from core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
+from models.user import User
+from models.session import Session
+from schemas.auth import RegisterRequest, LoginRequest, TokenResponse, UserOut
 
 
 class AuthService:
@@ -63,7 +65,7 @@ class AuthService:
             user=UserOut.model_validate(user),
         )
 
-    async def refresh(self, refresh_token: str | None) -> dict:
+    async def refresh(self, refresh_token: Optional[str]) -> dict:
         if not refresh_token:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

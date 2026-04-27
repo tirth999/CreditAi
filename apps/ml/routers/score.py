@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..data.synthetic_gen import generate_demo_application
-from ..models.bert_model import analyze_text
-from ..xai.shap_explainer import explain_single
-from ..xai.adverse_action import generate_adverse_action
-from ..fairness.metrics import compute_fairness_metrics
+from data.synthetic_gen import generate_demo_application
+from models.bert_model import analyze_text
+from xai.shap_explainer import explain_single
+from xai.adverse_action import generate_adverse_action
+from fairness.metrics import compute_fairness_metrics
 
 router = APIRouter()
 

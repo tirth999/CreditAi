@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
+import type { NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
 import { z } from "zod"
 
 const loginSchema = z.object({
@@ -7,10 +7,10 @@ const loginSchema = z.object({
   password: z.string().min(8),
 })
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -20,25 +20,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = loginSchema.safeParse(credentials)
         if (!parsed.success) return null
 
-        const res = await fetch(
-          `${process.env.BACKEND_URL ?? "http://localhost:8000"}/api/auth/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(parsed.data),
-          }
-        )
-        if (!res.ok) return null
+        try {
+          const res = await fetch(
+            `${process.env.BACKEND_URL ?? "http://localhost:8000"}/api/auth/login`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(parsed.data),
+            }
+          )
+          if (!res.ok) return null
 
-        const data = await res.json()
-        return {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.full_name,
-          role: data.user.role,
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-          accessTokenExpires: Date.now() + 30 * 60 * 1000,
+          const data = await res.json()
+          return {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.full_name,
+            role: data.user.role,
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            accessTokenExpires: Date.now() + 30 * 60 * 1000,
+          }
+        } catch {
+          return null
         }
       },
     }),
@@ -68,7 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: { signIn: "/login", error: "/login" },
   session: { strategy: "jwt" },
-})
+}
 
 async function refreshAccessToken(token: any) {
   try {

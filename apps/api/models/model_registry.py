@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 from datetime import datetime
 from sqlalchemy import String, Boolean, JSON
 from sqlalchemy.orm import Mapped, mapped_column
-from ..core.database import Base
+from core.database import Base
 
 
 class ModelRegistry(Base):
@@ -21,4 +23,4 @@ class ModelRegistry(Base):
     artifact_path: Mapped[str] = mapped_column(String(500))
     parameters: Mapped[dict] = mapped_column(JSON, default={})
     fairness_baseline: Mapped[dict] = mapped_column(JSON, default={})
-    training_samples: Mapped[int | None]
+    training_samples: Mapped[Optional[int]]

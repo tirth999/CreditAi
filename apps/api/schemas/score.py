@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, ConfigDict
-from .fairness import FairnessOut
+from schemas.fairness import FairnessOut
 
 
 class ShapValueOut(BaseModel):

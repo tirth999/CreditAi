@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 from datetime import datetime
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from ..core.database import Base
+from core.database import Base
 
 
 class AlternativeData(Base):
@@ -15,5 +17,5 @@ class AlternativeData(Base):
     source_type: Mapped[str] = mapped_column(String(50))
     raw_score: Mapped[float]
     normalized_score: Mapped[float]
-    confidence: Mapped[float | None]
+    confidence: Mapped[Optional[float]]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)

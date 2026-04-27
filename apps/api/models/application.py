@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Optional
 import uuid
 from datetime import datetime
 from sqlalchemy import String, Boolean, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from ..core.database import Base
+from core.database import Base
 
 
 class Application(Base):
@@ -16,26 +18,26 @@ class Application(Base):
     status: Mapped[str] = mapped_column(String(20), default="pending")
 
     # Traditional credit features
-    payment_history_pct: Mapped[float | None]
-    amounts_owed: Mapped[float | None]
-    credit_utilization_ratio: Mapped[float | None]
-    credit_length_months: Mapped[int | None]
-    new_inquiries_6m: Mapped[int | None]
-    credit_mix_count: Mapped[int | None]
-    annual_income: Mapped[float | None]
-    employment_status: Mapped[str | None] = mapped_column(String(50))
-    zip_code: Mapped[str | None] = mapped_column(String(10))
-    age: Mapped[int | None]
+    payment_history_pct: Mapped[Optional[float]]
+    amounts_owed: Mapped[Optional[float]]
+    credit_utilization_ratio: Mapped[Optional[float]]
+    credit_length_months: Mapped[Optional[int]]
+    new_inquiries_6m: Mapped[Optional[int]]
+    credit_mix_count: Mapped[Optional[int]]
+    annual_income: Mapped[Optional[float]]
+    employment_status: Mapped[Optional[str]] = mapped_column(String(50))
+    zip_code: Mapped[Optional[str]] = mapped_column(String(10))
+    age: Mapped[Optional[int]]
 
     # Alternative data features
     has_alt_data: Mapped[bool] = mapped_column(Boolean, default=False)
-    mobile_usage_score: Mapped[float | None]
-    utility_payment_ratio: Mapped[float | None]
-    rental_history_months: Mapped[int | None]
-    digital_payment_frequency: Mapped[float | None]
-    financial_narrative_text: Mapped[str | None] = mapped_column(Text)
+    mobile_usage_score: Mapped[Optional[float]]
+    utility_payment_ratio: Mapped[Optional[float]]
+    rental_history_months: Mapped[Optional[int]]
+    digital_payment_frequency: Mapped[Optional[float]]
+    financial_narrative_text: Mapped[Optional[str]] = mapped_column(Text)
 
     # Demographic (opt-in only)
-    gender: Mapped[str | None] = mapped_column(String(20))
-    ethnicity: Mapped[str | None] = mapped_column(String(50))
+    gender: Mapped[Optional[str]] = mapped_column(String(20))
+    ethnicity: Mapped[Optional[str]] = mapped_column(String(50))
     demographic_consented: Mapped[bool] = mapped_column(Boolean, default=False)

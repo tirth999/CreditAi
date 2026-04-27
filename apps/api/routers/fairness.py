@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.fairness import FairnessOut, FairnessAggregateOut
-from ..services.fairness_service import FairnessService
-from ..core.deps import get_db, get_current_user, require_admin
+from schemas.fairness import FairnessOut, FairnessAggregateOut
+from services.fairness_service import FairnessService
+from core.deps import get_db, get_current_user, require_admin
 
 router = APIRouter()
 

@@ -1,8 +1,13 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(__file__))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .core.config import settings
-from .routers import auth, score, fairness, drift, models, federated, admin
+from core.config import settings
+from routers import auth, score, fairness, drift, models, federated, admin
 
 
 @asynccontextmanager

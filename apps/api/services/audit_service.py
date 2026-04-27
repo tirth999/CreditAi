@@ -4,8 +4,8 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 
-from ..models.user import User
-from ..models.audit_log import AuditLog
+from models.user import User
+from models.audit_log import AuditLog
 
 
 class AuditService:

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.score import ScoreCreate, ScoreOut, ScoreJobOut, ScoreStatusOut
-from ..services.score_service import ScoreService
-from ..core.deps import get_db, get_current_user
+from schemas.score import ScoreCreate, ScoreOut, ScoreJobOut, ScoreStatusOut
+from services.score_service import ScoreService
+from core.deps import get_db, get_current_user
 
 router = APIRouter()
 

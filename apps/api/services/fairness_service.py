@@ -3,8 +3,8 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from ..models.fairness_report import FairnessReport
-from ..schemas.fairness import FairnessOut, FairnessAggregateOut
+from models.fairness_report import FairnessReport
+from schemas.fairness import FairnessOut, FairnessAggregateOut
 
 
 class FairnessService:

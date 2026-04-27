@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from ..core.config import ml_settings
-from ..models.bert_model import _finbert_pipeline
+from core.config import ml_settings
+from models.bert_model import _finbert_pipeline
 
 router = APIRouter()
 

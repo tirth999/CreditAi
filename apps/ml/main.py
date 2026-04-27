@@ -1,8 +1,20 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(__file__))
+
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .core.config import ml_settings
-from .routers import score, train, federated, health
+from core.config import ml_settings
+
+# Lazy-import routers — some have heavy deps (torch, shap, etc.)
+try:
+    from routers import score, train, federated, health as health_router
+    _routers_loaded = True
+except ImportError as e:
+    print(f"⚠ Some ML routers failed to import (missing deps): {e}")
+    _routers_loaded = False
 
 
 @asynccontextmanager
@@ -33,12 +45,13 @@ async def api_key_middleware(request: Request, call_next):
     return await call_next(request)
 
 
-app.include_router(score.router, prefix="/ml", tags=["score"])
-app.include_router(train.router, prefix="/ml", tags=["train"])
-app.include_router(federated.router, prefix="/ml", tags=["federated"])
-app.include_router(health.router, prefix="/ml", tags=["health"])
+if _routers_loaded:
+    app.include_router(score.router, prefix="/ml", tags=["score"])
+    app.include_router(train.router, prefix="/ml", tags=["train"])
+    app.include_router(federated.router, prefix="/ml", tags=["federated"])
+    app.include_router(health_router.router, prefix="/ml", tags=["health"])
 
 
 @app.get("/health")
 async def health_root():
-    return {"status": "ok"}
+    return {"status": "ok", "routers_loaded": _routers_loaded}

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.model import ModelOut, ModelListOut
-from ..services.score_service import ScoreService
-from ..core.deps import get_db, get_current_user, require_admin
+from schemas.model import ModelOut, ModelListOut
+from services.score_service import ScoreService
+from core.deps import get_db, get_current_user, require_admin
 
 router = APIRouter()
 
