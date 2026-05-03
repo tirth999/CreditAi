@@ -1,29 +1,11 @@
-import dynamic from "next/dynamic"
-import PublicNavbar from "@/components/home/PublicNavbar"
-import HeroSection from "@/components/home/HeroSection"
-import StatsSection from "@/components/home/StatsSection"
-import FeaturesGrid from "@/components/home/FeaturesGrid"
-import HowItWorks from "@/components/home/HowItWorks"
-import ResearchSection from "@/components/home/ResearchSection"
-import CTASection from "@/components/home/CTASection"
-import HomeFooter from "@/components/home/HomeFooter"
+import LandingClient from "@/components/landing/LandingClient"
 
 export const metadata = {
-  title: "CreditAI — Predict Risk. Build Trust. Lend Smarter.",
-  description: "AI-powered credit risk scoring with explainability, fairness auditing, and drift detection. Built on 7 peer-reviewed research papers.",
+  title: "CreditAI — Your Credit. Decoded.",
+  description:
+    "AI-powered credit analysis. Know your score, fix your future. Real-time monitoring, dispute generation, and personalized action plans.",
 }
 
 export default function HomePage() {
-  return (
-    <main style={{ background: "var(--bg-primary)" }}>
-      <PublicNavbar />
-      <HeroSection />
-      <StatsSection />
-      <FeaturesGrid />
-      <HowItWorks />
-      <ResearchSection />
-      <CTASection />
-      <HomeFooter />
-    </main>
-  )
+  return <LandingClient />
 }

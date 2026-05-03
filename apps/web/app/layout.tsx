@@ -3,22 +3,29 @@ import "./globals.css"
 import { Providers } from "@/components/Providers"
 
 export const metadata: Metadata = {
-  title: "CreditAI — Intelligent Credit Risk Platform",
+  title: "CreditAI — Your Credit. Decoded.",
   description:
-    "AI-powered credit scoring with fairness, explainability, and drift detection. Built for the future of ethical finance.",
+    "AI-powered credit intelligence platform. Real-time score monitoring, AI dispute generation, and personalized action plans.",
   openGraph: {
-    title: "CreditAI — Intelligent Credit Risk Platform",
-    description: "Neural credit scoring with XAI, fairness monitoring, and real-time drift detection.",
+    title: "CreditAI — Your Credit. Decoded.",
+    description: "AI-powered credit analysis. Know your score, fix your future.",
     type: "website",
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body
-        className="antialiased font-sans"
-        style={{ background: "var(--bg-primary)", color: `rgb(var(--text))` }}
+        style={{
+          background: "var(--bg-void)",
+          color: "var(--text-primary)",
+          fontFamily: "var(--font-body)",
+        }}
       >
         <Providers>{children}</Providers>
       </body>

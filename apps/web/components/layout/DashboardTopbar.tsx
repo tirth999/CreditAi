@@ -1,125 +1,133 @@
 "use client"
 
 import { signOut } from "next-auth/react"
-import { Menu, LogOut, Settings, User } from "lucide-react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useAppStore } from "@/store/appStore"
-import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { LogOut, Bell } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
 interface Props {
   user: { id?: string; name?: string | null; email?: string | null; role?: string }
 }
 
-function getInitials(name?: string | null): string {
-  if (!name) return "U"
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2)
+const PAGE_TITLES: Record<string, string> = {
+  "/dashboard": "Overview",
+  "/dashboard/score-history": "Score History",
+  "/dashboard/credit-factors": "Credit Factors",
+  "/dashboard/scores": "Accounts",
+  "/dashboard/disputes": "Disputes",
+  "/dashboard/ai-advisor": "AI Advisor",
+  "/dashboard/drift": "Alerts",
+  "/dashboard/settings": "Settings",
+  "/dashboard/admin": "Administration",
+  "/dashboard/models": "Model Registry",
+  "/dashboard/fairness": "Fairness Audit",
+  "/dashboard/xai-explorer": "XAI Explorer",
+  "/dashboard/new-application": "New Application",
 }
 
 export function DashboardTopbar({ user }: Props) {
-  const { setSidebarOpen } = useAppStore()
+  const pathname = usePathname()
+  const pageTitle = PAGE_TITLES[pathname] || "Dashboard"
 
   return (
     <header
-      className="h-14 flex items-center justify-between px-6 border-b flex-shrink-0"
       style={{
-        background: "var(--glass-bg)",
-        backdropFilter: "blur(24px)",
-        borderColor: "var(--glass-border)",
+        height: 56,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 24px",
+        background: "var(--bg-void)",
+        borderBottom: "1px solid var(--border)",
+        flexShrink: 0,
       }}
     >
-      {/* Left: Mobile hamburger */}
-      <div className="flex items-center gap-3">
+      {/* Left: Page title */}
+      <h1
+        style={{
+          fontFamily: "var(--font-editorial)",
+          fontSize: 20,
+          fontStyle: "italic",
+          fontWeight: 400,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {pageTitle}
+      </h1>
+
+      {/* Right: Controls */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        {/* Theme toggle */}
+        <ThemeToggle />
+
+        {/* Notification bell */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className="md:hidden p-2 rounded-lg transition-colors hover:bg-white/5"
-          style={{ color: "var(--text-muted)" }}
-          aria-label="Open sidebar"
-        >
-          <Menu size={20} />
-        </button>
-        <span className="text-sm font-medium md:hidden" style={{ color: `rgb(var(--text))` }}>
-          CreditAI
-        </span>
-      </div>
-
-      {/* Right: Avatar + DropdownMenu */}
-      <div className="flex items-center gap-3 ml-auto">
-        <span
-          className="hidden sm:inline text-xs px-2 py-0.5 rounded-full capitalize"
           style={{
-            background: "rgba(201,168,76,0.15)",
-            color: "var(--accent-gold)",
-            border: "1px solid rgba(201,168,76,0.25)",
+            background: "none",
+            border: "1px solid var(--border)",
+            borderRadius: 0,
+            width: 32,
+            height: 32,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            color: "var(--text-secondary)",
+            transition: "border-color 0.12s ease, color 0.12s ease",
           }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-lit)"
+            e.currentTarget.style.color = "var(--text-primary)"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border)"
+            e.currentTarget.style.color = "var(--text-secondary)"
+          }}
+          aria-label="Notifications"
         >
-          {user.role ?? "user"}
-        </span>
+          <Bell size={14} />
+        </button>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gold-400/30">
-              <Avatar className="h-8 w-8 cursor-pointer" style={{ border: "1px solid var(--glass-border)" }}>
-                <AvatarFallback
-                  style={{
-                    background: "rgba(201,168,76,0.15)",
-                    color: "var(--accent-gold)",
-                    fontSize: 12,
-                    fontWeight: 600,
-                  }}
-                >
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-56"
+        {/* User + sign out */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
             style={{
-              background: "var(--bg-secondary)",
-              border: "1px solid var(--glass-border)",
-              backdropFilter: "blur(24px)",
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: "var(--text-secondary)",
             }}
           >
-            <DropdownMenuLabel style={{ color: `rgb(var(--text))` }}>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">{user.name ?? "User"}</span>
-                <span className="text-xs font-normal" style={{ color: "var(--text-muted)" }}>
-                  {user.email ?? ""}
-                </span>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator style={{ background: "var(--glass-border)" }} />
-            <DropdownMenuItem asChild className="cursor-pointer" style={{ color: `rgb(var(--text))` }}>
-              <Link href="/dashboard/settings" className="flex items-center gap-2">
-                <User size={14} />
-                Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator style={{ background: "var(--glass-border)" }} />
-            <DropdownMenuItem
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="cursor-pointer"
-              style={{ color: "#ef4444" }}
-            >
-              <LogOut size={14} className="mr-2" />
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            {user.name || user.email || "User"}
+          </span>
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            style={{
+              background: "none",
+              border: "1px solid var(--border)",
+              borderRadius: 0,
+              width: 32,
+              height: 32,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "var(--text-secondary)",
+              transition: "border-color 0.12s ease, color 0.12s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--error)"
+              e.currentTarget.style.color = "var(--error)"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)"
+              e.currentTarget.style.color = "var(--text-secondary)"
+            }}
+            aria-label="Sign out"
+          >
+            <LogOut size={14} />
+          </button>
+        </div>
       </div>
     </header>
   )
