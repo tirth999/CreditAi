@@ -1,27 +1,28 @@
+import dynamic from "next/dynamic"
 import PublicNavbar from "@/components/home/PublicNavbar"
 import HeroSection from "@/components/home/HeroSection"
-import StatsBar from "@/components/home/StatsBar"
-import WaveTimeline from "@/components/home/WaveTimeline"
+import StatsSection from "@/components/home/StatsSection"
 import FeaturesGrid from "@/components/home/FeaturesGrid"
-import ComparisonTable from "@/components/home/ComparisonTable"
+import HowItWorks from "@/components/home/HowItWorks"
 import ResearchSection from "@/components/home/ResearchSection"
+import CTASection from "@/components/home/CTASection"
 import HomeFooter from "@/components/home/HomeFooter"
 
 export const metadata = {
-  title: "CreditAI — Intelligent Credit Risk Platform",
-  description: "AI credit scoring with fairness, XAI, and drift detection. Built on 7 peer-reviewed papers.",
+  title: "CreditAI — Predict Risk. Build Trust. Lend Smarter.",
+  description: "AI-powered credit risk scoring with explainability, fairness auditing, and drift detection. Built on 7 peer-reviewed research papers.",
 }
 
 export default function HomePage() {
   return (
-    <main style={{ background: "var(--bg-primary)", minHeight: "100vh" }}>
+    <main style={{ background: "var(--bg-primary)" }}>
       <PublicNavbar />
       <HeroSection />
-      <StatsBar />
-      <WaveTimeline />
+      <StatsSection />
       <FeaturesGrid />
-      <ComparisonTable />
+      <HowItWorks />
       <ResearchSection />
+      <CTASection />
       <HomeFooter />
     </main>
   )

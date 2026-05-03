@@ -3,120 +3,104 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  LayoutDashboard,
-  PlusCircle,
-  List,
-  Brain,
-  Scale,
-  Activity,
-  Database,
-  Settings,
-  Shield,
-  ChevronRight,
+  LayoutDashboard, PlusCircle, List, Brain,
+  Scale, Activity, Database, Settings, Shield,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { useAppStore } from "@/store/appStore"
 
 const NAV = [
-  { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { label: "New Application", href: "/dashboard/new-application", icon: PlusCircle },
-  { label: "Score History", href: "/dashboard/scores", icon: List },
-  { label: "XAI Explorer", href: "/dashboard/xai-explorer", icon: Brain },
-  { label: "Fairness Audit", href: "/dashboard/fairness", icon: Scale },
-  { label: "Drift Monitor", href: "/dashboard/drift", icon: Activity },
-  { label: "Model Registry", href: "/dashboard/models", icon: Database },
-  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+  { label: "Overview",        href: "/dashboard",                  icon: LayoutDashboard },
+  { label: "New Application", href: "/dashboard/new-application",  icon: PlusCircle },
+  { label: "Score History",   href: "/dashboard/scores",           icon: List },
+  { label: "XAI Explorer",    href: "/dashboard/xai-explorer",     icon: Brain },
+  { label: "Fairness Audit",  href: "/dashboard/fairness",         icon: Scale },
+  { label: "Drift Monitor",   href: "/dashboard/drift",            icon: Activity },
+  { label: "Model Registry",  href: "/dashboard/models",           icon: Database },
+  { label: "Settings",        href: "/dashboard/settings",         icon: Settings },
 ]
 
 const ADMIN_NAV = [{ label: "Admin", href: "/dashboard/admin", icon: Shield }]
 
-interface Props {
-  role: string
+interface Props { role: string }
+
+function SidebarLink({ href, label, Icon, active }: { href: string; label: string; Icon: any; active: boolean }) {
+  return (
+    <Link href={href} style={{
+      display: "flex", alignItems: "center", gap: 10,
+      padding: "9px 16px",
+      borderRadius: 0,
+      fontSize: 13,
+      fontFamily: "'DM Sans', sans-serif",
+      fontWeight: active ? 500 : 400,
+      color: active ? "var(--accent)" : "var(--neutral)",
+      textDecoration: "none",
+      background: active ? "rgba(200,169,110,0.08)" : "transparent",
+      borderLeft: `2px solid ${active ? "var(--accent)" : "transparent"}`,
+      transition: "color 0.2s ease, background 0.2s ease, border-color 0.2s ease",
+    }}
+      onMouseEnter={e => {
+        if (!active) {
+          e.currentTarget.style.color = "var(--brand)"
+          e.currentTarget.style.background = "var(--bg-raised)"
+        }
+      }}
+      onMouseLeave={e => {
+        if (!active) {
+          e.currentTarget.style.color = "var(--neutral)"
+          e.currentTarget.style.background = "transparent"
+        }
+      }}
+    >
+      <Icon size={15} strokeWidth={active ? 2 : 1.5} />
+      <span>{label}</span>
+    </Link>
+  )
 }
 
 function NavContent({ role }: Props) {
   const pathname = usePathname()
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b" style={{ borderColor: "var(--glass-border)" }}>
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold"
-          style={{ background: "var(--accent-gold)", color: "var(--bg-primary)" }}
-        >
-          CA
-        </div>
-        <span
-          className="font-palatino text-lg tracking-wide"
-          style={{ color: `rgb(var(--text))` }}
-        >
-          CreditAI
-        </span>
+      <div style={{ padding: "20px 20px 18px", borderBottom: "1px solid var(--border)" }}>
+        <Link href="/" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 18, letterSpacing: "0.1em", color: "var(--brand)", textDecoration: "none", fontWeight: 400 }}>
+          CREDITAI
+        </Link>
+        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--neutral)", letterSpacing: "0.06em", marginTop: 3 }}>CPSC 589 · Spring 2026</div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+      <nav style={{ flex: 1, padding: "12px 0", overflowY: "auto" }}>
+        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--neutral)", padding: "8px 20px 6px" }}>
+          Platform
+        </div>
         {NAV.map(({ label, href, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href))
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex items-center gap-3 py-2.5 rounded-xl text-sm transition-all duration-200 group",
-                active
-                  ? "bg-gold-400/10 text-gold-400 border-l-2 border-gold-400 pl-4"
-                  : "text-cream-200/60 hover:text-cream-100 hover:bg-white/5 pl-4"
-              )}
-              style={
-                active
-                  ? { background: "rgba(201,168,76,0.15)", color: "var(--accent-gold)", borderLeft: "2px solid var(--accent-gold)", paddingLeft: 14 }
-                  : { color: "var(--text-muted)" }
-              }
-            >
-              <Icon size={16} />
-              <span>{label}</span>
-              {active && <ChevronRight size={12} className="ml-auto opacity-60" />}
-            </Link>
-          )
+          return <SidebarLink key={href} href={href} label={label} Icon={Icon} active={active} />
         })}
 
         {role === "admin" && (
           <>
-            <div className="pt-4 pb-1 px-3">
-              <span className="text-xs uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Admin
-              </span>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--neutral)", padding: "16px 20px 6px" }}>
+              Admin
             </div>
             {ADMIN_NAV.map(({ label, href, icon: Icon }) => {
               const active = pathname.startsWith(href)
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className="flex items-center gap-3 py-2.5 rounded-xl text-sm transition-all duration-200"
-                  style={
-                    active
-                      ? { background: "rgba(201,168,76,0.15)", color: "var(--accent-gold)", borderLeft: "2px solid var(--accent-gold)", paddingLeft: 14 }
-                      : { color: "var(--text-muted)", paddingLeft: 16 }
-                  }
-                >
-                  <Icon size={16} />
-                  <span>{label}</span>
-                </Link>
-              )
+              return <SidebarLink key={href} href={href} label={label} Icon={Icon} active={active} />
             })}
           </>
         )}
       </nav>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t text-xs" style={{ borderColor: "var(--glass-border)", color: "var(--text-muted)" }}>
-        v1.0.0 · CPSC 589
+      <div style={{ padding: "14px 20px", borderTop: "1px solid var(--border)" }}>
+        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--neutral)", lineHeight: 1.6 }}>
+          v1.0.0-alpha
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -125,28 +109,22 @@ export function DashboardSidebar({ role }: Props) {
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <aside
-        className="hidden md:flex w-60 flex-shrink-0 flex-col border-r h-full"
-        style={{
-          background: "var(--glass-bg)",
-          backdropFilter: "blur(24px)",
-          borderColor: "var(--glass-border)",
-        }}
+      {/* Desktop sidebar — 240px fixed */}
+      <aside style={{
+        width: 240, flexShrink: 0,
+        background: "var(--bg-surface)",
+        borderRight: "1px solid var(--border)",
+        height: "100%",
+        display: "flex", flexDirection: "column",
+      }}
+        className="hidden md:flex"
       >
         <NavContent role={role} />
       </aside>
 
-      {/* Mobile sidebar via Sheet */}
+      {/* Mobile Sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent
-          side="left"
-          className="w-60 p-0 flex flex-col"
-          style={{
-            background: "var(--bg-secondary)",
-            borderColor: "var(--glass-border)",
-          }}
-        >
+        <SheetContent side="left" style={{ width: 240, padding: 0, background: "var(--bg-surface)", borderColor: "var(--border)" }}>
           <NavContent role={role} />
         </SheetContent>
       </Sheet>
