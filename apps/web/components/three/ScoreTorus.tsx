@@ -11,10 +11,6 @@ interface ScoreTorusProps {
   progress?: number // 0-1, controlled externally
 }
 
-/**
- * Score section — Hollow torus representing credit score arc
- * Arc angle derived from score percentage
- */
 export function ScoreTorus({ score = 742, animated = false, progress = 1 }: ScoreTorusProps) {
   const groupRef = useRef<THREE.Group>(null)
   const { isDark } = useTheme()
@@ -40,12 +36,12 @@ export function ScoreTorus({ score = 742, animated = false, progress = 1 }: Scor
   // Create torus geometry with animated arc
   const geometry = useMemo(() => {
     const arcAngle = maxArc * progress
-    return new THREE.TorusGeometry(1.5, 0.04, 16, 200, arcAngle)
+    return new THREE.TorusGeometry(1.7, 0.03, 16, 200, arcAngle)
   }, [maxArc, progress])
 
   // Background track (full circle, very dim)
   const trackGeometry = useMemo(() => {
-    return new THREE.TorusGeometry(1.5, 0.02, 16, 200, Math.PI * 2)
+    return new THREE.TorusGeometry(1.7, 0.02, 16, 200, Math.PI * 2)
   }, [])
 
   useFrame(() => {
@@ -55,11 +51,9 @@ export function ScoreTorus({ score = 742, animated = false, progress = 1 }: Scor
 
   return (
     <group ref={groupRef}>
-      {/* Track */}
       <mesh geometry={trackGeometry}>
         <meshBasicMaterial color={isDark ? "#222222" : "#E0E0D8"} />
       </mesh>
-      {/* Score arc */}
       <mesh geometry={geometry}>
         <meshBasicMaterial color={color} />
       </mesh>

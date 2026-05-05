@@ -12,17 +12,13 @@ interface Props {
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Overview",
   "/dashboard/score-history": "Score History",
-  "/dashboard/credit-factors": "Credit Factors",
-  "/dashboard/scores": "Accounts",
-  "/dashboard/disputes": "Disputes",
-  "/dashboard/ai-advisor": "AI Advisor",
-  "/dashboard/drift": "Alerts",
+  "/dashboard/xai-explorer": "XAI Explorer",
+  "/dashboard/fairness": "Fairness Audit",
+  "/dashboard/drift": "Drift Monitor",
+  "/dashboard/models": "Model Registry",
+  "/dashboard/new-application": "New Application",
   "/dashboard/settings": "Settings",
   "/dashboard/admin": "Administration",
-  "/dashboard/models": "Model Registry",
-  "/dashboard/fairness": "Fairness Audit",
-  "/dashboard/xai-explorer": "XAI Explorer",
-  "/dashboard/new-application": "New Application",
 }
 
 export function DashboardTopbar({ user }: Props) {

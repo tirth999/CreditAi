@@ -57,7 +57,7 @@ export default function Footer() {
               maxWidth: 280,
             }}
           >
-            AI-powered credit intelligence platform. Built for precision, not promises.
+            Explainable & fair AI credit scoring research platform. CPSC 589 · CSUF.
           </p>
         </div>
 

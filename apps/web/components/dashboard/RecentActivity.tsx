@@ -1,15 +1,15 @@
 "use client"
 
-const ACTIVITIES = [
-  { account: "Chase Sapphire", change: "+15", date: "May 1, 2026", impact: "Positive", isPositive: true },
-  { account: "Amex Gold", change: "-3", date: "Apr 28, 2026", impact: "Minor", isPositive: false },
-  { account: "Capital One", change: "+8", date: "Apr 25, 2026", impact: "Positive", isPositive: true },
-  { account: "Discover It", change: "+22", date: "Apr 20, 2026", impact: "Significant", isPositive: true },
-  { account: "Wells Fargo", change: "-7", date: "Apr 18, 2026", impact: "Moderate", isPositive: false },
+const APPLICATIONS = [
+  { id: "APP-2847", tier: "Low Risk", score: 742, confidence: "±12", date: "May 1, 2026", tierColor: "var(--success)" },
+  { id: "APP-2846", tier: "Medium Risk", score: 618, confidence: "±18", date: "Apr 28, 2026", tierColor: "#FFB340" },
+  { id: "APP-2845", tier: "Low Risk", score: 789, confidence: "±8", date: "Apr 25, 2026", tierColor: "var(--success)" },
+  { id: "APP-2844", tier: "High Risk", score: 485, confidence: "±24", date: "Apr 20, 2026", tierColor: "var(--error)" },
+  { id: "APP-2843", tier: "Low Risk", score: 756, confidence: "±10", date: "Apr 18, 2026", tierColor: "var(--success)" },
 ]
 
 /**
- * Recent activity table — minimal, horizontal 1px dividers only
+ * Recent scoring activity table — shows recently scored credit applications
  */
 export function RecentActivity() {
   return (
@@ -33,19 +33,19 @@ export function RecentActivity() {
           color: "var(--text-secondary)",
         }}
       >
-        RECENT ACTIVITY
+        RECENT SCORING ACTIVITY
       </div>
 
       {/* Column headers */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.5fr 0.8fr 1.2fr 1fr",
+          gridTemplateColumns: "1.2fr 1fr 0.8fr 0.8fr 1.2fr",
           padding: "8px 1.5rem",
           borderBottom: "1px solid var(--border)",
         }}
       >
-        {["Account", "Change", "Date", "Impact"].map((h) => (
+        {["Application", "Risk Tier", "Score", "Confidence", "Date"].map((h) => (
           <div
             key={h}
             style={{
@@ -63,14 +63,14 @@ export function RecentActivity() {
       </div>
 
       {/* Rows */}
-      {ACTIVITIES.map((activity, i) => (
+      {APPLICATIONS.map((app, i) => (
         <div
-          key={i}
+          key={app.id}
           style={{
             display: "grid",
-            gridTemplateColumns: "1.5fr 0.8fr 1.2fr 1fr",
+            gridTemplateColumns: "1.2fr 1fr 0.8fr 0.8fr 1.2fr",
             padding: "12px 1.5rem",
-            borderBottom: i < ACTIVITIES.length - 1 ? "1px solid var(--border)" : "none",
+            borderBottom: i < APPLICATIONS.length - 1 ? "1px solid var(--border)" : "none",
             transition: "background 0.12s ease",
             cursor: "default",
           }}
@@ -83,22 +83,42 @@ export function RecentActivity() {
         >
           <div
             style={{
-              fontFamily: "var(--font-body)",
+              fontFamily: "var(--font-mono)",
               fontSize: 14,
+              fontWeight: 700,
               color: "var(--text-primary)",
             }}
           >
-            {activity.account}
+            {app.id}
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 13,
+              color: app.tierColor,
+              fontWeight: 500,
+            }}
+          >
+            {app.tier}
           </div>
           <div
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: 14,
               fontWeight: 700,
-              color: activity.isPositive ? "var(--success)" : "var(--error)",
+              color: "var(--text-primary)",
             }}
           >
-            {activity.change}
+            {app.score}
+          </div>
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 13,
+              color: "var(--text-secondary)",
+            }}
+          >
+            {app.confidence}
           </div>
           <div
             style={{
@@ -107,16 +127,7 @@ export function RecentActivity() {
               color: "var(--text-secondary)",
             }}
           >
-            {activity.date}
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: 12,
-              color: "var(--text-secondary)",
-            }}
-          >
-            {activity.impact}
+            {app.date}
           </div>
         </div>
       ))}

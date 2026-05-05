@@ -3,18 +3,18 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  LayoutDashboard, BarChart3, Layers, CreditCard,
-  FileText, Bot, Bell, Settings, Shield,
+  LayoutDashboard, BarChart3, Sparkles, Scale,
+  Activity, Database, FilePlus, Settings, Shield,
 } from "lucide-react"
 
 const NAV = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Score History", href: "/dashboard/score-history", icon: BarChart3 },
-  { label: "Credit Factors", href: "/dashboard/credit-factors", icon: Layers },
-  { label: "Accounts", href: "/dashboard/scores", icon: CreditCard },
-  { label: "Disputes", href: "/dashboard/disputes", icon: FileText },
-  { label: "AI Advisor", href: "/dashboard/ai-advisor", icon: Bot },
-  { label: "Alerts", href: "/dashboard/drift", icon: Bell },
+  { label: "XAI Explorer", href: "/dashboard/xai-explorer", icon: Sparkles },
+  { label: "Fairness Audit", href: "/dashboard/fairness", icon: Scale },
+  { label: "Drift Monitor", href: "/dashboard/drift", icon: Activity },
+  { label: "Model Registry", href: "/dashboard/models", icon: Database },
+  { label: "New Application", href: "/dashboard/new-application", icon: FilePlus },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ]
 
@@ -186,7 +186,7 @@ function NavContent({ role }: Props) {
               letterSpacing: "0.05em",
             }}
           >
-            PRO PLAN
+            RESEARCHER
           </div>
         </div>
       </div>

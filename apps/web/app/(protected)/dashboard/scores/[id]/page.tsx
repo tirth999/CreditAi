@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -33,8 +34,20 @@ const MOCK = {
 
 export default function ScoreDetailPage() {
   const { id } = useParams()
-  const { data: scoreData } = useScore(id as string)
-  const d = scoreData ?? MOCK
+  const isDemo = typeof id === "string" && id.startsWith("demo-")
+  const { data: scoreData } = useScore(isDemo ? "" : (id as string))
+  const [demoData, setDemoData] = useState<any>(null)
+
+  useEffect(() => {
+    if (isDemo) {
+      try {
+        const stored = sessionStorage.getItem("creditai-demo-score")
+        if (stored) setDemoData(JSON.parse(stored))
+      } catch { /* ignore */ }
+    }
+  }, [isDemo])
+
+  const d = demoData ?? scoreData ?? MOCK
   const showAdverse = d.score < 620 || d.probability_of_default > 0.5
 
   return (

@@ -20,6 +20,7 @@ export const authOptions: NextAuthOptions = {
         const parsed = loginSchema.safeParse(credentials)
         if (!parsed.success) return null
 
+        // Try the real backend first
         try {
           const res = await fetch(
             `${process.env.BACKEND_URL ?? "http://localhost:8000"}/api/auth/login`,
@@ -42,6 +43,25 @@ export const authOptions: NextAuthOptions = {
             accessTokenExpires: Date.now() + 30 * 60 * 1000,
           }
         } catch {
+          // Backend unreachable — fall back to demo credentials
+          // This allows the frontend to work standalone for academic demos
+          const DEMO_USERS: Record<string, { password: string; name: string; role: string }> = {
+            "admin@creditai.dev": { password: "Admin123!", name: "Admin User", role: "admin" },
+            "demo@creditai.dev": { password: "Demo123!", name: "Demo Researcher", role: "user" },
+          }
+
+          const demo = DEMO_USERS[parsed.data.email]
+          if (demo && parsed.data.password === demo.password) {
+            return {
+              id: parsed.data.email === "admin@creditai.dev" ? "admin-001" : "demo-001",
+              email: parsed.data.email,
+              name: demo.name,
+              role: demo.role,
+              accessToken: "demo-token",
+              refreshToken: "demo-refresh",
+              accessTokenExpires: Date.now() + 24 * 60 * 60 * 1000,
+            }
+          }
           return null
         }
       },

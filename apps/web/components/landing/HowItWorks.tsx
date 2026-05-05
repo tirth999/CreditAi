@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useRef, Suspense } from "react"
-import { Canvas } from "@react-three/fiber"
-import { DataParticles } from "@/components/three/DataParticles"
+import { useEffect, useRef } from "react"
+import dynamic from "next/dynamic"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+const NeuralNetwork = dynamic(() => import("@/components/three/NeuralNetwork"), { ssr: false })
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -13,29 +14,28 @@ if (typeof window !== "undefined") {
 const STEPS = [
   {
     number: "01",
-    title: "Connect Your Accounts",
+    title: "Submit Application Data",
     description:
-      "Link your financial accounts securely. We use bank-level encryption to pull your credit data from all three bureaus — Experian, Equifax, and TransUnion.",
+      "Enter traditional credit features — payment history, utilization, account age — alongside alternative data such as utility payments and rental history for thin-file applicants.",
     side: "left" as const,
   },
   {
     number: "02",
-    title: "AI Analyzes Your Profile",
+    title: "Neural Ensemble Scoring",
     description:
-      "Our machine learning models process your credit history, payment patterns, utilization ratios, and account age to build a comprehensive risk profile.",
+      "A deep neural ensemble, benchmarked against EBM and logistic regression baselines, generates a credit risk score with MAPIE conformal prediction intervals for calibrated uncertainty.",
     side: "right" as const,
     has3D: true,
   },
   {
     number: "03",
-    title: "Get Your Action Plan",
+    title: "Explainability & Fairness Report",
     description:
-      "Receive personalized recommendations ranked by impact. Dispute errors, optimize utilization, and track your progress with AI-generated action items.",
+      "Receive a full SHAP waterfall, LIME comparison, feature-importance ranking, and an AIF360/Fairlearn fairness audit — all exportable as a PDF adverse-action notice.",
     side: "left" as const,
   },
 ]
 
-// Simple geometric SVG icon grids
 function GeometricIcon() {
   return (
     <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,7 +69,7 @@ function ScoreCardMockup() {
       }}
     >
       <div className="t-card-label" style={{ marginBottom: 12 }}>
-        CREDIT SCORE
+        RISK SCORE
       </div>
       <div
         style={{
@@ -90,7 +90,7 @@ function ScoreCardMockup() {
         +12 THIS MONTH
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {["Payment History", "Credit Age", "Utilization"].map((label) => (
+        {["SHAP Impact", "Confidence", "Fairness"].map((label) => (
           <div key={label} style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--text-secondary)" }}>
               {label}
@@ -102,7 +102,7 @@ function ScoreCardMockup() {
                 color: "var(--text-primary)",
               }}
             >
-              {label === "Payment History" ? "98%" : label === "Credit Age" ? "7y 4m" : "24%"}
+              {label === "SHAP Impact" ? "+0.34" : label === "Confidence" ? "95%" : "0.92"}
             </span>
           </div>
         ))}
@@ -185,16 +185,8 @@ function StepBlock({
       }}
     >
       {step.has3D ? (
-        <div style={{ width: 260, height: 260 }} aria-hidden="true">
-          <Canvas
-            camera={{ position: [0, 0, 5], fov: 50 }}
-            dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
-            style={{ background: "transparent" }}
-          >
-            <Suspense fallback={null}>
-              <DataParticles count={200} />
-            </Suspense>
-          </Canvas>
+        <div style={{ width: 300, height: 200 }} aria-hidden="true">
+          <NeuralNetwork width={300} height={200} />
         </div>
       ) : index === 0 ? (
         <GeometricIcon />

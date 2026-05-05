@@ -11,39 +11,39 @@ if (typeof window !== "undefined") {
 const FEATURES = [
   {
     number: "01",
-    label: "MONITORING",
-    title: "Real-time Score Monitoring",
-    body: "Track your credit score across all three bureaus with real-time alerts on any changes or inquiries.",
+    label: "EXPLAINABILITY",
+    title: "SHAP & LIME Explanations",
+    body: "Waterfall, beeswarm, and force-plot visualizations reveal exactly why the model scored each applicant — satisfying regulatory transparency requirements.",
   },
   {
     number: "02",
-    label: "DISPUTES",
-    title: "AI Dispute Letter Generator",
-    body: "Generate legally-compliant dispute letters powered by machine learning. Bureau-specific formatting included.",
+    label: "FAIRNESS",
+    title: "Algorithmic Bias Auditing",
+    body: "AIF360 and Fairlearn power five fairness metrics — demographic parity, equalized odds, disparate impact — with automated mitigation strategies.",
   },
   {
     number: "03",
-    label: "ANALYSIS",
-    title: "Credit Factor Breakdown",
-    body: "Understand exactly what impacts your score. Payment history, utilization, age — all weighted and explained.",
+    label: "UNCERTAINTY",
+    title: "Conformal Prediction Intervals",
+    body: "MAPIE-backed conformal prediction delivers 95% coverage guarantees so every score ships with a calibrated confidence range.",
   },
   {
     number: "04",
-    label: "OPTIMIZATION",
-    title: "Utilization Optimizer",
-    body: "Get precise recommendations on how to redistribute balances across cards for maximum score impact.",
+    label: "ALTERNATIVE DATA",
+    title: "Thin-File Inclusion",
+    body: "Mobile usage, utility payments, and rental history enrich scoring for applicants traditional credit features would exclude.",
   },
   {
     number: "05",
-    label: "SECURITY",
-    title: "Identity Theft Alerts",
-    body: "Dark web monitoring and real-time alerts when your personal information appears in new credit applications.",
+    label: "DRIFT",
+    title: "Production Drift Monitoring",
+    body: "PSI, KS-test, and AUC tracking detect model degradation in real time — with automated Celery retrain triggers when thresholds breach.",
   },
   {
     number: "06",
-    label: "SIMULATION",
-    title: "Score Simulator",
-    body: "Model the impact of financial decisions before you make them. Pay off a card, open a new account — see the result.",
+    label: "NLP",
+    title: "FinBERT Narrative Analysis",
+    body: "Financial text embeddings from FinBERT enrich thin-file profiles, transforming unstructured narratives into predictive credit signals.",
   },
 ]
 
@@ -88,7 +88,7 @@ export default function FeaturesGrid() {
           FEATURES
         </div>
         <h2 className="t-section" style={{ marginBottom: 60 }}>
-          Everything You Need
+          Research Capabilities
         </h2>
 
         <div

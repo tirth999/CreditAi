@@ -12,10 +12,12 @@ if (typeof window !== "undefined") {
 
 const SCORE = 742
 const BREAKDOWN = [
-  { label: "PAYMENT HISTORY", value: "98%", font: "var(--font-mono)" },
-  { label: "CREDIT AGE", value: "7Y 4M", font: "var(--font-mono)" },
-  { label: "UTILIZATION", value: "24%", font: "var(--font-mono)" },
+  { label: "MODEL AUC", value: "0.94", font: "var(--font-mono)" },
+  { label: "FAIRNESS INDEX", value: "0.92", font: "var(--font-mono)" },
+  { label: "PREDICTION COVERAGE", value: "95%", font: "var(--font-mono)" },
 ]
+
+
 
 export default function ScoreSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -36,7 +38,6 @@ export default function ScoreSection() {
     }
 
     const ctx = gsap.context(() => {
-      // Pinned scroll section
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -49,7 +50,6 @@ export default function ScoreSection() {
         },
       })
 
-      // Animate torus arc
       const progressObj = { val: 0 }
       tl.to(progressObj, {
         val: 1,
@@ -57,7 +57,6 @@ export default function ScoreSection() {
         onUpdate: () => setTorusProgress(progressObj.val),
       })
 
-      // Counter animation (not scrub — one-shot)
       const counterObj = { val: 0 }
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -91,63 +90,105 @@ export default function ScoreSection() {
         padding: "80px 5vw",
       }}
     >
-      {/* 3D Torus Canvas behind the score */}
-      <div
-        style={{
-          position: "absolute",
-          width: 400,
-          height: 400,
-          pointerEvents: "none",
-        }}
-        aria-hidden="true"
-      >
-        <Canvas
-          camera={{ position: [0, 0, 4], fov: 50 }}
-          dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
-          style={{ background: "transparent" }}
-        >
-          <Suspense fallback={null}>
-            <ScoreTorus score={SCORE} progress={torusProgress} />
-          </Suspense>
-        </Canvas>
-      </div>
 
-      {/* Score number */}
       <div
-        ref={scoreRef}
         style={{
           position: "relative",
-          zIndex: 1,
-          textAlign: "center",
+          width: "min(100vw, 450px)",
+          height: "min(100vw, 450px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(120px, 20vw, 240px)",
-            letterSpacing: "-0.05em",
-            lineHeight: 0.9,
-            color: "var(--text-primary)",
-          }}
-        >
-          {scoreDisplay}
-        </div>
 
         <div
-          className="t-eyebrow"
-          style={{ marginTop: 16, marginBottom: 48 }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+          }}
+          aria-hidden="true"
         >
-          GOOD STANDING
+          <Canvas
+            camera={{ position: [0, 0, 4], fov: 50 }}
+            dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
+            style={{ background: "transparent" }}
+          >
+            <Suspense fallback={null}>
+              <ScoreTorus score={SCORE} progress={torusProgress} />
+            </Suspense>
+          </Canvas>
+        </div>
+
+
+        <div
+          style={{
+            position: "absolute",
+            inset: "10%",
+            borderRadius: "50%",
+            border: "1px solid var(--border)",
+            opacity: isVisible ? 1 : 0,
+            transition: "opacity 1s ease 0.4s",
+            animation: isVisible ? "pulseRing 3s ease-in-out infinite" : "none",
+          }}
+          aria-hidden="true"
+        />
+
+
+        <div
+          style={{
+            position: "absolute",
+            inset: "4%",
+            borderRadius: "50%",
+            border: "1px dashed var(--border)",
+            opacity: isVisible ? 0.5 : 0,
+            transition: "opacity 1s ease 0.6s",
+            animation: isVisible ? "rotateOrbit 30s linear infinite" : "none",
+          }}
+          aria-hidden="true"
+        />
+
+
+
+
+        <div
+          ref={scoreRef}
+          style={{
+            position: "relative",
+            zIndex: 2,
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(72px, 12vw, 140px)",
+              letterSpacing: "-0.05em",
+              lineHeight: 0.9,
+              color: "var(--text-primary)",
+            }}
+          >
+            {scoreDisplay}
+          </div>
+
+          <div
+            className="t-eyebrow"
+            style={{ marginTop: 16 }}
+          >
+            LOW RISK TIER
+          </div>
         </div>
       </div>
 
-      {/* 3-column breakdown */}
+
       <div
         style={{
           position: "relative",
           zIndex: 1,
           display: "flex",
           gap: 0,
+          marginTop: 48,
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? "translateY(0)" : "translateY(30px)",
           transition: "opacity 0.9s ease 0.8s, transform 0.9s ease 0.8s",
@@ -177,6 +218,19 @@ export default function ScoreSection() {
           </div>
         ))}
       </div>
+
+
+      <style>{`
+        @keyframes pulseRing {
+          0%, 100% { transform: scale(1); opacity: 0.4; }
+          50% { transform: scale(1.04); opacity: 0.15; }
+        }
+        @keyframes rotateOrbit {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+      `}</style>
     </section>
   )
 }

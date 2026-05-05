@@ -9,9 +9,9 @@ if (typeof window !== "undefined") {
 }
 
 const STATS = [
-  { value: "94%", label: "SCORE IMPROVEMENT RATE" },
-  { value: "2.3M+", label: "PROFILES ANALYZED" },
-  { value: "48hrs", label: "AVERAGE FIRST RESULT" },
+  { value: "7", label: "RESEARCH PROBLEMS SOLVED" },
+  { value: "5", label: "FAIRNESS METRICS TRACKED" },
+  { value: "95%", label: "CONFORMAL COVERAGE GUARANTEE" },
 ]
 
 export default function StatsBanner() {

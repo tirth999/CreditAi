@@ -3,41 +3,22 @@
 import { useState, Suspense } from "react"
 import dynamic from "next/dynamic"
 
-const ScoreChart = dynamic(
-  () =>
-    import("@/components/three/BarChart3D").then((mod) => {
-      const { BarChart3D } = mod
-      const { Canvas } = require("@react-three/fiber")
-
-      function FullChart() {
-        return (
-          <div style={{ width: "100%", height: 500 }} aria-hidden="true">
-            <Canvas
-              camera={{ position: [0, 0, 6], fov: 50 }}
-              dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
-              style={{ background: "transparent" }}
-            >
-              <BarChart3D />
-            </Canvas>
-          </div>
-        )
-      }
-      return { default: FullChart }
-    }),
+const ScoreDistribution = dynamic(
+  () => import("@/components/charts/ScoreDistribution"),
   { ssr: false }
 )
 
 const TABS = ["3M", "6M", "1Y", "ALL"]
 
 const SCORE_EVENTS = [
-  { date: "2026-05-01", score: 748, event: "Payment recorded", change: "+6" },
-  { date: "2026-04-15", score: 742, event: "Utilization decreased", change: "+4" },
-  { date: "2026-04-01", score: 738, event: "Account age milestone", change: "+3" },
-  { date: "2026-03-15", score: 735, event: "Hard inquiry", change: "-5" },
-  { date: "2026-03-01", score: 740, event: "Payment recorded", change: "+8" },
-  { date: "2026-02-15", score: 732, event: "Balance paid down", change: "+7" },
-  { date: "2026-02-01", score: 725, event: "New account opened", change: "-3" },
-  { date: "2026-01-15", score: 728, event: "Payment recorded", change: "+6" },
+  { date: "2026-05-01", application: "APP-2847", score: 748, tier: "Low Risk", confidence: "±12" },
+  { date: "2026-04-28", application: "APP-2846", score: 618, tier: "Medium Risk", confidence: "±18" },
+  { date: "2026-04-25", application: "APP-2845", score: 789, tier: "Low Risk", confidence: "±8" },
+  { date: "2026-04-20", application: "APP-2844", score: 485, tier: "High Risk", confidence: "±24" },
+  { date: "2026-04-18", application: "APP-2843", score: 756, tier: "Low Risk", confidence: "±10" },
+  { date: "2026-04-12", application: "APP-2842", score: 692, tier: "Medium Risk", confidence: "±14" },
+  { date: "2026-04-05", application: "APP-2841", score: 534, tier: "High Risk", confidence: "±22" },
+  { date: "2026-03-28", application: "APP-2840", score: 811, tier: "Low Risk", confidence: "±6" },
 ]
 
 export default function ScoreHistoryPage() {
@@ -77,7 +58,7 @@ export default function ScoreHistoryPage() {
         ))}
       </div>
 
-      {/* Full-width 3D chart */}
+      {/* Score Distribution Chart */}
       <div
         style={{
           background: "var(--bg-surface)",
@@ -91,7 +72,7 @@ export default function ScoreHistoryPage() {
           fallback={
             <div
               style={{
-                height: 500,
+                height: 320,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -104,11 +85,11 @@ export default function ScoreHistoryPage() {
             </div>
           }
         >
-          <ScoreChart />
+          <ScoreDistribution />
         </Suspense>
       </div>
 
-      {/* Score events table */}
+      {/* Scoring history table */}
       <div
         style={{
           background: "var(--bg-surface)",
@@ -121,12 +102,12 @@ export default function ScoreHistoryPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr 2fr 0.8fr",
+            gridTemplateColumns: "1.2fr 1fr 0.8fr 1fr 0.8fr",
             padding: "10px 1.5rem",
             borderBottom: "1px solid var(--border)",
           }}
         >
-          {["Date", "Score", "Event", "Change"].map((h) => (
+          {["Date", "Application", "Score", "Risk Tier", "Confidence"].map((h) => (
             <div
               key={h}
               style={{
@@ -149,7 +130,7 @@ export default function ScoreHistoryPage() {
             key={i}
             style={{
               display: "grid",
-              gridTemplateColumns: "1.2fr 0.8fr 2fr 0.8fr",
+              gridTemplateColumns: "1.2fr 1fr 0.8fr 1fr 0.8fr",
               padding: "12px 1.5rem",
               borderBottom: i < SCORE_EVENTS.length - 1 ? "1px solid var(--border)" : "none",
               transition: "background 0.12s ease",
@@ -165,20 +146,23 @@ export default function ScoreHistoryPage() {
               {event.date}
             </div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-              {event.score}
+              {event.application}
             </div>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-secondary)" }}>
-              {event.event}
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
+              {event.score}
             </div>
             <div
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 fontSize: 13,
-                fontWeight: 700,
-                color: event.change.startsWith("+") ? "var(--success)" : "var(--error)",
+                fontWeight: 500,
+                color: event.tier === "Low Risk" ? "var(--success)" : event.tier === "High Risk" ? "var(--error)" : "#FFB340",
               }}
             >
-              {event.change}
+              {event.tier}
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-secondary)" }}>
+              {event.confidence}
             </div>
           </div>
         ))}

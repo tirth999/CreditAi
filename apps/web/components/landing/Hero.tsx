@@ -18,13 +18,15 @@ export default function Hero() {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (prefersReduced) return
 
-    const tl = gsap.timeline({ delay: 0.3 })
-    tl.from(eyebrowRef.current, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" })
-      .from(h1Ref.current, { y: 50, opacity: 0, duration: 0.9, ease: "power3.out" }, "-=0.5")
-      .from(subRef.current, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.5")
-      .from(ctaRef.current, { y: 20, opacity: 0, duration: 0.7, ease: "power3.out" }, "-=0.4")
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.3 })
+      tl.from(eyebrowRef.current, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" })
+        .from(h1Ref.current, { y: 50, opacity: 0, duration: 0.9, ease: "power3.out" }, "-=0.5")
+        .from(subRef.current, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.5")
+        .from(ctaRef.current, { y: 20, opacity: 0, duration: 0.7, ease: "power3.out" }, "-=0.4")
+    }, sectionRef)
 
-    return () => { tl.kill() }
+    return () => ctx.revert()
   }, [])
 
   return (
@@ -65,6 +67,8 @@ export default function Hero() {
         </Canvas>
       </div>
 
+
+
       {/* Content — left column */}
       <div
         style={{
@@ -80,7 +84,7 @@ export default function Hero() {
           className="t-eyebrow"
           style={{ marginBottom: 24 }}
         >
-          CREDIT INTELLIGENCE
+          EXPLAINABLE AI · CREDIT SCORING
         </div>
 
         {/* H1 */}
@@ -89,9 +93,9 @@ export default function Hero() {
           className="t-hero"
           style={{ marginBottom: 28 }}
         >
-          YOUR CREDIT.
+          FAIR CREDIT.
           <br />
-          DECODED.
+          EXPLAINED.
         </h1>
 
         {/* Sub */}
@@ -106,7 +110,7 @@ export default function Hero() {
             marginBottom: 40,
           }}
         >
-          AI-powered credit analysis. Know your score, fix your future.
+          Explainable ML credit scoring with SHAP, LIME, fairness auditing, and conformal prediction — built for transparency, not black boxes.
         </p>
 
         {/* CTAs */}

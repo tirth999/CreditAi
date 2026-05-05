@@ -1,16 +1,16 @@
 "use client"
 
-const FACTORS = [
-  { label: "Payment History", value: 95, max: 100 },
-  { label: "Amounts Owed", value: 72, max: 100 },
-  { label: "Credit History", value: 85, max: 100 },
-  { label: "New Credit", value: 90, max: 100 },
-  { label: "Credit Mix", value: 68, max: 100 },
+const FEATURES = [
+  { label: "Annual Income", value: 0.34, max: 0.40 },
+  { label: "Debt-to-Income Ratio", value: 0.28, max: 0.40 },
+  { label: "Credit History Length", value: 0.18, max: 0.40 },
+  { label: "Open Accounts", value: 0.12, max: 0.40 },
+  { label: "Recent Inquiries", value: 0.08, max: 0.40 },
 ]
 
 /**
- * Factor breakdown — 5 horizontal CSS bars
- * Label left, bar track center, value right
+ * Feature importance breakdown — SHAP values
+ * Horizontal bars with normalized SHAP magnitudes
  */
 export function FactorBreakdown() {
   return (
@@ -34,13 +34,13 @@ export function FactorBreakdown() {
           marginBottom: 24,
         }}
       >
-        FACTOR BREAKDOWN
+        FEATURE IMPORTANCE — SHAP
       </div>
 
       {/* Bars */}
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        {FACTORS.map((factor) => (
-          <div key={factor.label}>
+        {FEATURES.map((feature) => (
+          <div key={feature.label}>
             <div
               style={{
                 display: "flex",
@@ -56,7 +56,7 @@ export function FactorBreakdown() {
                   color: "var(--text-secondary)",
                 }}
               >
-                {factor.label}
+                {feature.label}
               </span>
               <span
                 style={{
@@ -66,7 +66,7 @@ export function FactorBreakdown() {
                   color: "var(--text-primary)",
                 }}
               >
-                {factor.value}%
+                {feature.value.toFixed(2)}
               </span>
             </div>
             {/* Bar track */}
@@ -81,7 +81,7 @@ export function FactorBreakdown() {
               {/* Bar fill */}
               <div
                 style={{
-                  width: `${(factor.value / factor.max) * 100}%`,
+                  width: `${(feature.value / feature.max) * 100}%`,
                   height: "100%",
                   background: "var(--accent)",
                   position: "absolute",

@@ -5,30 +5,10 @@ import dynamic from "next/dynamic"
 import { MetricCard } from "@/components/dashboard/MetricCard"
 import { FactorBreakdown } from "@/components/dashboard/FactorBreakdown"
 import { RecentActivity } from "@/components/dashboard/RecentActivity"
-import { AIAdvisorCard } from "@/components/dashboard/AIAdvisorCard"
+import { ModelPerformanceCard } from "@/components/dashboard/AIAdvisorCard"
 
-const ScoreChart = dynamic(
-  () =>
-    import("@/components/three/BarChart3D").then((mod) => {
-      // Wrap BarChart3D in a Canvas for dashboard usage
-      const { BarChart3D } = mod
-      const { Canvas } = require("@react-three/fiber")
-
-      function ScoreChartCanvas() {
-        return (
-          <div style={{ width: "100%", height: 320 }} aria-hidden="true">
-            <Canvas
-              camera={{ position: [0, 0, 6], fov: 50 }}
-              dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
-              style={{ background: "transparent" }}
-            >
-              <BarChart3D />
-            </Canvas>
-          </div>
-        )
-      }
-      return { default: ScoreChartCanvas }
-    }),
+const ScoreDistribution = dynamic(
+  () => import("@/components/charts/ScoreDistribution"),
   { ssr: false }
 )
 
@@ -47,36 +27,37 @@ export default function DashboardPage() {
       >
         <div style={{ background: "var(--bg-void)" }}>
           <MetricCard
-            label="Current Score"
-            value="742"
-            delta="+12 this month"
+            label="Model AUC"
+            value="0.847"
+            delta="+0.012 from v2.3"
             deltaPositive={true}
           />
         </div>
         <div style={{ background: "var(--bg-void)" }}>
           <MetricCard
-            label="Payment History"
-            value="98%"
-            sub="On time"
+            label="SHAP Coverage"
+            value="94.2%"
+            sub="All features explained"
           />
         </div>
         <div style={{ background: "var(--bg-void)" }}>
           <MetricCard
-            label="Utilization"
-            value="24%"
-            sub="Optimal range"
+            label="Fairness Score"
+            value="0.91"
+            sub="Demographic parity"
           />
         </div>
         <div style={{ background: "var(--bg-void)" }}>
           <MetricCard
-            label="Credit Age"
-            value="7y 4m"
-            sub="Good"
+            label="Applications Scored"
+            value="1,247"
+            delta="+89 this week"
+            deltaPositive={true}
           />
         </div>
       </div>
 
-      {/* Row 2 — Score History (8 cols) + Factor Breakdown (4 cols) */}
+      {/* Row 2 — Score Distribution (8 cols) + Feature Importance (4 cols) */}
       <div
         style={{
           display: "grid",
@@ -86,7 +67,7 @@ export default function DashboardPage() {
           marginBottom: 24,
         }}
       >
-        {/* Score History 3D Chart */}
+        {/* Score Distribution Chart */}
         <div
           style={{
             background: "var(--bg-surface)",
@@ -106,7 +87,7 @@ export default function DashboardPage() {
               marginBottom: 16,
             }}
           >
-            SCORE HISTORY — 12 MONTHS
+            SCORE DISTRIBUTION — ALL APPLICANTS
           </div>
           <Suspense
             fallback={
@@ -127,17 +108,17 @@ export default function DashboardPage() {
               </div>
             }
           >
-            <ScoreChart />
+            <ScoreDistribution />
           </Suspense>
         </div>
 
-        {/* Factor Breakdown */}
+        {/* Feature Importance */}
         <div style={{ background: "var(--bg-void)" }}>
           <FactorBreakdown />
         </div>
       </div>
 
-      {/* Row 3 — Recent Activity (8 cols) + AI Advisor (4 cols) */}
+      {/* Row 3 — Recent Activity (8 cols) + Model Performance (4 cols) */}
       <div
         style={{
           display: "grid",
@@ -150,7 +131,7 @@ export default function DashboardPage() {
           <RecentActivity />
         </div>
         <div style={{ background: "var(--bg-void)" }}>
-          <AIAdvisorCard />
+          <ModelPerformanceCard />
         </div>
       </div>
     </div>

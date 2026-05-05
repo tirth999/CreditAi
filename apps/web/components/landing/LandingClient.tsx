@@ -1,19 +1,26 @@
 "use client"
 
-import dynamic from "next/dynamic"
+import { useEffect } from "react"
 import { useLenis } from "@/hooks/useLenis"
 
-// Dynamic imports to prevent SSR issues with Three.js/GSAP
-const Hero = dynamic(() => import("@/components/landing/Hero"), { ssr: false })
-const ScoreSection = dynamic(() => import("@/components/landing/ScoreSection"), { ssr: false })
-const HowItWorks = dynamic(() => import("@/components/landing/HowItWorks"), { ssr: false })
-const FeaturesGrid = dynamic(() => import("@/components/landing/FeaturesGrid"), { ssr: false })
-const StatsBanner = dynamic(() => import("@/components/landing/StatsBanner"), { ssr: false })
-const CTABanner = dynamic(() => import("@/components/landing/CTABanner"), { ssr: false })
-const Footer = dynamic(() => import("@/components/landing/Footer"), { ssr: false })
+import Hero from "@/components/landing/Hero"
+import ScoreSection from "@/components/landing/ScoreSection"
+import HowItWorks from "@/components/landing/HowItWorks"
+import FeaturesGrid from "@/components/landing/FeaturesGrid"
+import StatsBanner from "@/components/landing/StatsBanner"
+import CTABanner from "@/components/landing/CTABanner"
+import Footer from "@/components/landing/Footer"
 
 export default function LandingPage() {
   useLenis()
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.history) {
+      // Prevent browser from restoring previous scroll position on refresh
+      window.history.scrollRestoration = "manual"
+      window.scrollTo(0, 0)
+    }
+  }, [])
 
   return (
     <main style={{ background: "var(--bg-void)" }}>

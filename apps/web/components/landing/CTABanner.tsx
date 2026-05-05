@@ -94,9 +94,9 @@ export default function CTABanner() {
             marginBottom: 24,
           }}
         >
-          READY TO FIX
+          EXPLORE THE
           <br />
-          YOUR CREDIT?
+          PLATFORM
         </h2>
         <p
           style={{
@@ -106,7 +106,7 @@ export default function CTABanner() {
             marginBottom: 40,
           }}
         >
-          No subscriptions. No surprises.
+          Transparent scoring. Auditable decisions. Regulatory-ready AI.
         </p>
         <Link href="/register" className="btn-primary" style={{ fontSize: 16, padding: "16px 48px" }}>
           GET STARTED →

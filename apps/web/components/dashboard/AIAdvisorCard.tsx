@@ -2,26 +2,18 @@
 
 import Link from "next/link"
 
-const RECOMMENDATIONS = [
-  {
-    priority: "HIGH",
-    text: "Dispute outdated collection on Experian report — removed entries typically add 40-60 points.",
-  },
-  {
-    priority: "MED",
-    text: "Reduce Chase Sapphire utilization from 34% to below 30% by next billing cycle.",
-  },
-  {
-    priority: "LOW",
-    text: "Request credit limit increase on Discover It to improve overall utilization ratio.",
-  },
+const METRICS = [
+  { label: "Precision", value: "0.89" },
+  { label: "Recall", value: "0.84" },
+  { label: "F1 Score", value: "0.86" },
+  { label: "AUC-ROC", value: "0.847" },
 ]
 
 /**
- * AI Advisor sidebar card
- * 3 numbered recommendations with priority badges
+ * Model performance sidebar card
+ * Shows current production model version and key metrics
  */
-export function AIAdvisorCard() {
+export function ModelPerformanceCard() {
   return (
     <div
       style={{
@@ -46,66 +38,117 @@ export function AIAdvisorCard() {
           marginBottom: 20,
         }}
       >
-        AI RECOMMENDATIONS
+        MODEL PERFORMANCE
       </div>
 
-      {/* Recommendations */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
-        {RECOMMENDATIONS.map((rec, i) => (
-          <div key={i} style={{ display: "flex", gap: 12 }}>
-            {/* Number */}
-            <div
+      {/* Model version */}
+      <div style={{ marginBottom: 20 }}>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            color: "var(--text-tertiary)",
+            marginBottom: 6,
+          }}
+        >
+          PRODUCTION MODEL
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 18,
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            lineHeight: 1,
+          }}
+        >
+          v2.4.1
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "var(--text-secondary)",
+            marginTop: 4,
+          }}
+        >
+          XGBoost Ensemble
+        </div>
+      </div>
+
+      {/* Metrics */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
+        {METRICS.map((metric) => (
+          <div key={metric.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: 13,
+                color: "var(--text-secondary)",
+              }}
+            >
+              {metric.label}
+            </span>
+            <span
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: 14,
                 fontWeight: 700,
-                color: "var(--text-tertiary)",
-                minWidth: 20,
-                lineHeight: 1.5,
+                color: "var(--text-primary)",
               }}
             >
-              {String(i + 1).padStart(2, "0")}
-            </div>
-
-            <div>
-              {/* Priority badge */}
-              <span
-                className={rec.priority === "HIGH" ? "pill pill--active" : "pill"}
-                style={{ marginBottom: 6, display: "inline-block" }}
-              >
-                {rec.priority}
-              </span>
-              {/* Text */}
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  color: "var(--text-secondary)",
-                  marginTop: 6,
-                }}
-              >
-                {rec.text}
-              </p>
-            </div>
+              {metric.value}
+            </span>
           </div>
         ))}
       </div>
 
+      {/* Status indicator */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 0",
+          marginTop: 12,
+          borderTop: "1px solid var(--border)",
+        }}
+      >
+        <div
+          style={{
+            width: 6,
+            height: 6,
+            background: "var(--success)",
+            borderRadius: "50%",
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            color: "var(--text-secondary)",
+          }}
+        >
+          Healthy — No drift detected
+        </span>
+      </div>
+
       {/* CTA */}
       <Link
-        href="/dashboard/ai-advisor"
+        href="/dashboard/models"
         className="btn-primary"
         style={{
           width: "100%",
           justifyContent: "center",
-          marginTop: 20,
+          marginTop: 12,
           fontSize: 13,
           padding: "10px 20px",
           textAlign: "center",
         }}
       >
-        Generate Dispute Letter →
+        View Model Registry →
       </Link>
     </div>
   )
