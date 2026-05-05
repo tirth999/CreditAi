@@ -41,7 +41,7 @@ export default function PublicNavbar() {
         borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
         transition: "background-color 0.3s ease, border-color 0.3s ease",
       }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px" }}>
 
           {/* Logo */}
           <Link href="/" style={{
@@ -53,7 +53,7 @@ export default function PublicNavbar() {
           </Link>
 
           {/* Desktop nav */}
-          <div style={{ display: "flex", gap: 36, alignItems: "center" }}>
+          <div className="nav-desktop-links" style={{ display: "flex", gap: 36, alignItems: "center" }}>
             {NAV_LINKS.map(l => (
               <Link
                 key={l.label} href={l.href}
@@ -89,7 +89,7 @@ export default function PublicNavbar() {
               )}
             </button>
 
-            <Link href="/login" style={{
+            <Link href="/login" className="nav-desktop-links" style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14, color: "var(--neutral)",
               textDecoration: "none", padding: "8px 18px",
@@ -102,7 +102,7 @@ export default function PublicNavbar() {
               Login
             </Link>
 
-            <Link href="/register" style={{
+            <Link href="/register" className="nav-desktop-links" style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14, fontWeight: 600,
               color: "var(--bg-primary)",
@@ -119,7 +119,7 @@ export default function PublicNavbar() {
 
             {/* Mobile */}
             <button
-              className="md:hidden"
+              className="nav-mobile-toggle"
               onClick={() => setMobileOpen(!mobileOpen)}
               style={{ background: "none", border: "none", cursor: "pointer", color: "var(--brand)", padding: 4 }}
             >

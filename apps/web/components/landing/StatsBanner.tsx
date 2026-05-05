@@ -52,6 +52,7 @@ export default function StatsBanner() {
       }}
     >
       <div
+        className="stats-row"
         style={{
           maxWidth: 1200,
           margin: "0 auto",

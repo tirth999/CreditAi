@@ -78,6 +78,7 @@ export default function FeaturesGrid() {
   return (
     <section
       id="features"
+      className="landing-section"
       style={{
         background: "var(--bg-void)",
         padding: "120px 5vw",
@@ -93,10 +94,11 @@ export default function FeaturesGrid() {
 
         <div
           ref={gridRef}
+          className="landing-grid-3"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 1, // 1px gap acts as grid lines
+            gap: 1,
             background: "var(--border)",
           }}
         >

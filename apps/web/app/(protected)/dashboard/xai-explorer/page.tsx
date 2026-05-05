@@ -64,7 +64,7 @@ export default function XAIExplorerPage() {
             </SelectContent>
           </Select>
           <Badge style={{ marginBottom: 16, background: "rgba(20,184,166,0.15)", color: "#14b8a6", border: "1px solid rgba(20,184,166,0.25)" }}>Agreement: 87%</Badge>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="dashboard-grid-2-1" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {["LIME Explanation", "SHAP Explanation"].map(title => (
               <Card key={title} style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", borderRadius: 16 }}>
                 <CardHeader><CardTitle style={{ fontSize: 16, color: `rgb(var(--text))` }}>{title}</CardTitle></CardHeader>
@@ -82,7 +82,7 @@ export default function XAIExplorerPage() {
         </TabsContent>
 
         <TabsContent value="interp">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="dashboard-grid-2-1" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {[{ title: "Interpretable (LogReg/EBM)", color: "#14b8a6" }, { title: "Black-Box (XGBoost)", color: "#d4a84b" }].map(m => (
               <div key={m.title} style={{ background: "var(--glass-bg)", border: "1px solid var(--glass-border)", borderRadius: 20, padding: 28 }}>
                 <h3 style={{ fontFamily: "var(--font-palatino)", fontSize: 18, color: `rgb(var(--text))`, marginBottom: 16 }}>{m.title}</h3>

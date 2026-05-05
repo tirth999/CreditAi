@@ -24,6 +24,7 @@ export default function DashboardPage() {
     <div>
       {/* Row 1 — 4 metric cards */}
       <div
+        className="dashboard-metrics"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -66,6 +67,7 @@ export default function DashboardPage() {
 
       {/* Row 2 — Score Distribution (8 cols) + Feature Importance (4 cols) */}
       <div
+        className="dashboard-grid-2-1"
         style={{
           display: "grid",
           gridTemplateColumns: "2fr 1fr",
@@ -127,6 +129,7 @@ export default function DashboardPage() {
 
       {/* Row 3 — Recent Activity (8 cols) + Model Performance (4 cols) */}
       <div
+        className="dashboard-grid-2-1"
         style={{
           display: "grid",
           gridTemplateColumns: "2fr 1fr",

@@ -59,6 +59,8 @@ export function RecentActivity() {
         RECENT SCORING ACTIVITY
       </div>
 
+      <div className="responsive-table-wrap">
+      <div style={{ minWidth: 580 }}>
       <div
         style={{
           display: "grid",
@@ -162,6 +164,8 @@ export function RecentActivity() {
           </Row>
         )
       })}
+      </div>
+      </div>
     </div>
   )
 }

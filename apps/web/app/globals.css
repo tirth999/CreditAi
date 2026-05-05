@@ -420,6 +420,136 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ══════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 1024px)
+   ══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  /* Dashboard layout */
+  .dashboard-shell { flex-direction: column !important; }
+  .dashboard-sidebar {
+    position: fixed !important;
+    left: -280px;
+    top: 0;
+    bottom: 0;
+    width: 260px !important;
+    z-index: 1000;
+    transition: left 0.25s ease;
+  }
+  .dashboard-sidebar.open { left: 0; }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+  .sidebar-overlay.open { display: block; }
+  .mobile-menu-btn { display: flex !important; }
+
+  /* Dashboard grids → 2 cols */
+  .dashboard-metrics { grid-template-columns: repeat(2, 1fr) !important; }
+  .dashboard-grid-2-1 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Landing */
+  .hero-split { flex-direction: column !important; }
+  .hero-left { width: 100% !important; padding: 60px 24px 32px !important; }
+  .hero-right { width: 100% !important; height: 300px !important; min-height: 300px !important; }
+  .landing-grid-3 { grid-template-columns: 1fr 1fr !important; }
+  .landing-grid-4 { grid-template-columns: 1fr 1fr !important; }
+  .landing-section { padding: 60px 24px !important; }
+  .stats-row { flex-wrap: wrap !important; gap: 24px !important; }
+  .stats-row > * { min-width: 140px !important; }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 768px)
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Dashboard metrics → 1 col */
+  .dashboard-metrics { grid-template-columns: 1fr !important; }
+
+  /* Dashboard main padding */
+  .dashboard-main { padding: 16px !important; }
+
+  /* Topbar */
+  .dashboard-topbar { padding: 0 16px !important; }
+  .topbar-user-name { display: none !important; }
+
+  /* Tables → horizontal scroll */
+  .responsive-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .responsive-table-wrap table { min-width: 600px; }
+
+  /* Landing hero */
+  .t-hero { font-size: clamp(48px, 10vw, 80px) !important; }
+  .t-section { font-size: clamp(28px, 5vw, 48px) !important; }
+  .hero-right { height: 220px !important; min-height: 220px !important; }
+
+  /* Landing grids */
+  .landing-grid-3 { grid-template-columns: 1fr !important; }
+  .landing-grid-4 { grid-template-columns: 1fr !important; }
+
+  /* Footer → stack */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+
+  /* Score detail */
+  .score-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Form */
+  .form-grid { grid-template-columns: 1fr !important; }
+
+  /* CTA */
+  .cta-banner { flex-direction: column !important; text-align: center !important; gap: 20px !important; }
+
+  /* Stats banner */
+  .stats-row { flex-direction: column !important; align-items: center !important; }
+
+  /* How it works */
+  .steps-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — SMALL PHONE (≤ 480px)
+   ══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .t-hero { font-size: clamp(36px, 10vw, 56px) !important; }
+  .hero-left { padding: 40px 16px 24px !important; }
+  .landing-section { padding: 40px 16px !important; }
+  .card { padding: 1rem !important; }
+  .card-flat { padding: 1rem !important; }
+  .btn-primary { padding: 10px 20px !important; font-size: 13px !important; }
+  .btn-ghost { padding: 10px 20px !important; font-size: 13px !important; }
+}
+
+/* ══════════════════════════════════════
+   MOBILE MENU BUTTON (hidden by default)
+   ══════════════════════════════════════ */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+/* Public navbar — mobile hamburger hidden on desktop */
+.nav-mobile-toggle { display: none; }
+
+@media (max-width: 768px) {
+  .nav-desktop-links { display: none !important; }
+  .nav-mobile-toggle { display: block !important; }
+}
+
+/* ══════════════════════════════════════
    TAILWIND (backward compat)
    ══════════════════════════════════════ */
 @tailwind base;

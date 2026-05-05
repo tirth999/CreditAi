@@ -109,6 +109,7 @@ export default function ScoreHistoryPage() {
 
       {/* Scoring history table */}
       <div
+        className="responsive-table-wrap"
         style={{
           background: "var(--bg-surface)",
           border: "1px solid var(--border)",
