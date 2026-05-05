@@ -10,8 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/slider"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
@@ -19,6 +17,7 @@ import { applicationSchema } from "@/lib/validations"
 import { useSubmitApplication } from "@/hooks/useScore"
 import useInterval from "@/hooks/useInterval"
 import api from "@/lib/api"
+import { addDemoScore } from "@/lib/demoStore"
 
 /**
  * Compute a simulated credit score from form inputs.
@@ -51,7 +50,6 @@ function computeDemoScore(data: any): number {
 export default function ApplicationForm() {
   const router = useRouter()
   const [step, setStep] = useState(1)
-  const [thinFile, setThinFile] = useState(false)
   const [consent, setConsent] = useState(false)
   const [finbertAvail, setFinbertAvail] = useState(false)
   const [jobId, setJobId] = useState<string | null>(null)
@@ -107,7 +105,7 @@ export default function ApplicationForm() {
         confidence_lower: score - Math.round(8 + Math.random() * 16),
         confidence_upper: score + Math.round(8 + Math.random() * 16),
         model_version: "xgb-v2.4.1",
-        alt_data_used: thinFile,
+        alt_data_used: !!(formData.mobile_usage_score || formData.utility_payment_ratio || formData.rental_history_months),
         nlp_used: false,
         shap_values: [
           { feature_name: "payment_history_pct", shap_value: 0.18, feature_value: formData.payment_history_pct, direction: "positive" },
@@ -123,16 +121,17 @@ export default function ApplicationForm() {
         ] : [],
         fairness_metrics: { demographic_parity: 0.042, equalized_odds: 0.067, disparate_impact: 0.87 },
       }
-      sessionStorage.setItem("creditai-demo-score", JSON.stringify(demoResult))
+      const demoId = `demo-${Date.now()}`
+      addDemoScore(demoResult, demoId)
       toast.success(`Score calculated: ${score}`)
-      router.push(`/dashboard/scores/demo-${Date.now()}`)
+      router.push(`/dashboard/scores/${demoId}`)
     }, 3800)
 
     return () => {
       timers.forEach(clearTimeout)
       clearTimeout(finishTimer)
     }
-  }, [demoScoring, getValues, router, thinFile])
+  }, [demoScoring, getValues, router])
 
   useInterval(async () => {
     if (!jobId) return
@@ -152,14 +151,18 @@ export default function ApplicationForm() {
   }, polling ? 2000 : null)
 
   const onSubmit = async (data: any) => {
-    // Try real backend first
+    // Try real backend first — creates Application + Score in DB
     try {
-      setPolling(true)
-      const res = await submitMutation.mutateAsync(data)
-      setJobId(res.job_id)
-    } catch {
-      // Backend unreachable — use demo scoring
-      setPolling(false)
+      const res = await api.post("/api/submit", data)
+      const result = res.data
+      // Store for the score detail page
+      const demoId = result.score_id || `demo-${Date.now()}`
+      addDemoScore(result, demoId)
+      toast.success(`Score calculated: ${result.score}`)
+      router.push(`/dashboard/scores/${demoId}`)
+    } catch (err: any) {
+      // Backend unreachable or auth failed — use demo scoring
+      console.warn("Backend submit failed, falling back to demo scoring:", err?.message)
       setDemoScoring(true)
     }
   }
@@ -257,30 +260,27 @@ export default function ApplicationForm() {
         {step === 2 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <h2 style={{ fontFamily: "var(--font-editorial)", fontSize: 22, color: "var(--text-primary)" }}>Step 2: Alternative Data</h2>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Switch checked={thinFile} onCheckedChange={setThinFile} />
-              <Label style={{ color: "var(--text-primary)", fontSize: 14 }}>I have limited credit history (thin-file applicant)</Label>
-            </div>
-            {thinFile && (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, padding: 20, background: "var(--bg-surface)", border: "1px solid var(--border)" }}>
-                <div>
-                  <Label style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Mobile Usage Score (0-100)</Label>
-                  <Slider defaultValue={[50]} max={100} step={1} onValueChange={v => setValue("mobile_usage_score", v[0])} />
-                </div>
-                <div>
-                  <Label htmlFor="utility_payment_ratio" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Utility Payment Ratio %</Label>
-                  <Input id="utility_payment_ratio" type="number" {...register("utility_payment_ratio", { valueAsNumber: true })} style={fieldStyle} />
-                </div>
-                <div>
-                  <Label htmlFor="rental_history_months" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Rental History (months)</Label>
-                  <Input id="rental_history_months" type="number" {...register("rental_history_months", { valueAsNumber: true })} style={fieldStyle} />
-                </div>
-                <div>
-                  <Label htmlFor="digital_payment_frequency" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Digital Payment Frequency</Label>
-                  <Input id="digital_payment_frequency" type="number" {...register("digital_payment_frequency", { valueAsNumber: true })} style={fieldStyle} />
-                </div>
+            <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.6, maxWidth: 600 }}>
+              These data points help improve scoring accuracy, especially for applicants with limited traditional credit history. All fields are optional.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, padding: 20, background: "var(--bg-surface)", border: "1px solid var(--border)" }}>
+              <div>
+                <Label htmlFor="mobile_usage_score" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Mobile Usage Score (0-100)</Label>
+                <Input id="mobile_usage_score" type="number" {...register("mobile_usage_score", { valueAsNumber: true })} style={fieldStyle} />
               </div>
-            )}
+              <div>
+                <Label htmlFor="utility_payment_ratio" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Utility Payment Ratio %</Label>
+                <Input id="utility_payment_ratio" type="number" {...register("utility_payment_ratio", { valueAsNumber: true })} style={fieldStyle} />
+              </div>
+              <div>
+                <Label htmlFor="rental_history_months" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Rental History (months)</Label>
+                <Input id="rental_history_months" type="number" {...register("rental_history_months", { valueAsNumber: true })} style={fieldStyle} />
+              </div>
+              <div>
+                <Label htmlFor="digital_payment_frequency" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Digital Payment Frequency</Label>
+                <Input id="digital_payment_frequency" type="number" {...register("digital_payment_frequency", { valueAsNumber: true })} style={fieldStyle} />
+              </div>
+            </div>
             {finbertAvail && (
               <div>
                 <Label htmlFor="financial_narrative" style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 6, display: "block" }}>Describe your financial situation (FinBERT NLP)</Label>
@@ -331,7 +331,7 @@ export default function ApplicationForm() {
             )}
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
               <Button type="button" variant="outline" onClick={() => setStep(2)} className="btn-ghost">← Back</Button>
-              <Button type="submit" disabled={submitMutation.isPending} className="btn-primary" style={{ padding: "10px 28px" }}>
+              <Button type="button" onClick={handleSubmit(onSubmit)} disabled={submitMutation.isPending} className="btn-primary" style={{ padding: "10px 28px" }}>
                 {submitMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : "Submit Application"}
               </Button>
             </div>

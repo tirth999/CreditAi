@@ -20,23 +20,22 @@ export const registerSchema = z
 export const applicationSchema = z.object({
   payment_history_pct: z.number().min(0).max(100),
   amounts_owed: z.number().min(0),
-  credit_utilization_ratio: z.number().min(0).max(100),
+  credit_utilization_pct: z.number().min(0).max(100),
   credit_length_months: z.number().int().min(0),
   new_inquiries_6m: z.number().int().min(0).max(50),
   credit_mix_count: z.number().int().min(0).max(20),
   annual_income: z.number().min(0),
-  employment_status: z.enum(["employed", "self_employed", "unemployed", "retired", "student"]),
+  employment_status: z.enum(["employed", "self-employed", "unemployed", "retired", "student"]),
   zip_code: z.string().regex(/^\d{5}(-\d{4})?$/, "Invalid zip code"),
   age: z.number().int().min(18).max(120),
-  has_alt_data: z.boolean().default(false),
   mobile_usage_score: z.number().min(0).max(100).optional(),
   utility_payment_ratio: z.number().min(0).max(100).optional(),
   rental_history_months: z.number().int().min(0).optional(),
   digital_payment_frequency: z.number().min(0).optional(),
-  financial_narrative_text: z.string().max(2000).optional(),
-  demographic_consented: z.boolean().default(false),
+  financial_narrative: z.string().max(2000).optional(),
   gender: z.string().optional(),
-  ethnicity: z.string().optional(),
+  age_group: z.string().optional(),
+  region_type: z.string().optional(),
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>

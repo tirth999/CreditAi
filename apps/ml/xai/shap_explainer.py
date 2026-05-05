@@ -1,6 +1,7 @@
+from __future__ import annotations
 import logging
 import numpy as np
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +10,7 @@ def explain(
     model: Any,
     X: np.ndarray,
     feature_names: list[str],
-    background: np.ndarray | None = None,
+    background: Optional[np.ndarray] = None,
 ) -> dict:
     """
     Compute SHAP values for the given model and input X.
@@ -71,7 +72,7 @@ def explain_single(
     model: Any,
     x: np.ndarray,
     feature_names: list[str],
-    background: np.ndarray | None = None,
+    background: Optional[np.ndarray] = None,
 ) -> list[dict]:
     """
     Explain a single sample. Returns sorted list of feature dicts with shap_value,

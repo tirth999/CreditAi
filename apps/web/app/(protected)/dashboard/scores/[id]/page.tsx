@@ -57,9 +57,8 @@ export default function ScoreDetailPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 24, marginBottom: 32 }}>
         {/* Left column */}
         <div style={{ background: "var(--glass-bg)", backdropFilter: "blur(24px)", border: "1px solid var(--glass-border)", borderRadius: 20, padding: 32, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-          <ScoreGauge score={d.score} size={240} />
-          <div style={{ fontFamily: "var(--font-palatino)", fontSize: 64, color: scoreToColor(d.score), lineHeight: 1, marginTop: 8 }}>{d.score}</div>
-          <div style={{ marginTop: 8 }}><RiskTierBadge tier={d.risk_tier} /></div>
+          <ScoreGauge score={d.score} size={220} />
+          <div style={{ marginTop: 16 }}><RiskTierBadge tier={d.risk_tier} /></div>
           <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 12 }}>Probability of default: <strong style={{ color: `rgb(var(--text))` }}>{(d.probability_of_default * 100).toFixed(1)}%</strong></p>
           <div style={{ marginTop: 16, width: "100%" }}><ConfidenceInterval lower={d.confidence_lower ?? d.score - 25} upper={d.confidence_upper ?? d.score + 25} score={d.score} /></div>
           <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap", justifyContent: "center" }}>

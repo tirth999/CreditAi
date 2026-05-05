@@ -1,4 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks
+from typing import Optional
 from training.train_pipeline import run_training_pipeline
 
 router = APIRouter()
@@ -7,7 +8,7 @@ router = APIRouter()
 @router.post("/train")
 async def train_model(
     background_tasks: BackgroundTasks,
-    model_version: str | None = None,
+    model_version: Optional[str] = None,
 ):
     background_tasks.add_task(run_training_pipeline, model_version)
     return {"status": "training_started", "model_version": model_version}

@@ -1,11 +1,12 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 import { MetricCard } from "@/components/dashboard/MetricCard"
 import { FactorBreakdown } from "@/components/dashboard/FactorBreakdown"
 import { RecentActivity } from "@/components/dashboard/RecentActivity"
 import { ModelPerformanceCard } from "@/components/dashboard/AIAdvisorCard"
+import { getDemoScores } from "@/lib/demoStore"
 
 const ScoreDistribution = dynamic(
   () => import("@/components/charts/ScoreDistribution"),
@@ -13,6 +14,12 @@ const ScoreDistribution = dynamic(
 )
 
 export default function DashboardPage() {
+  const [appCount, setAppCount] = useState(1247)
+
+  useEffect(() => {
+    const demoScores = getDemoScores()
+    setAppCount(1247 + demoScores.length)
+  }, [])
   return (
     <div>
       {/* Row 1 — 4 metric cards */}
@@ -50,8 +57,8 @@ export default function DashboardPage() {
         <div style={{ background: "var(--bg-void)" }}>
           <MetricCard
             label="Applications Scored"
-            value="1,247"
-            delta="+89 this week"
+            value={appCount.toLocaleString()}
+            delta={`+${getDemoScores().length || 89} recent`}
             deltaPositive={true}
           />
         </div>
